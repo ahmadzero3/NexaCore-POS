@@ -1,0 +1,130 @@
+/**
+ * Placeholder thickness minimized
+ * */
+.form-control::placeholder {
+  color: rgba(168, 170, 173, 0.75);
+  opacity: 1;
+}
+/**
+ * Change Group Button size - (Right Side Buttons)
+ * */
+ .cc-group-btn-size{
+  padding: .375rem .15rem;
+ }
+
+ /**
+  * Print page minimum width
+ */
+ .min-width-600{
+  min-width: 600px;
+ }
+
+ /**
+ * Autocomplete css
+ * */
+ .ui-autocomplete {
+  max-height: 160px;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent horizontal scrollbar */
+}
+
+/**
+ * Autocomplete Loader for input box
+ * */
+.ui-autocomplete-loading {
+  background: white url("autocomplete-loader/ui-anim_basic_16x16.gif") right center no-repeat;
+}
+
+/**
+ * Cursor not allowed
+ * */
+ .cursor-not-allowed{
+  cursor:not-allowed;
+ }
+
+ /**
+  * Input box border color change to primary class color
+  * */
+.custom-border-primary {
+    border-color: #007bff !important; /* Replace with your desired color */
+}
+
+/**
+ * Page Loader , Spinner
+ * */
+ #spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+#spinner-content {
+    text-align: center;
+}
+#loading-message {
+    color: white;
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+/**
+ * Highlight last added table row
+ * */
+tr.highlight {
+  animation: popIn 0.5s ease-out;
+}
+@keyframes popIn {
+  0% {
+    transform: scale(1.05);
+    background-color: rgb(0 140 255 / 5%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgb(0 140 255 / 5%);
+    box-shadow: none;
+  }
+}
+
+/**
+* no code 
+* */
+.text-transform-none{
+text-transform: none;
+}
+
+/**
+* input group input box, in one group i need to show some of the select or 
+* input box 30 %
+* */
+.cu-flex-30{
+  flex: 0 0 30% !important;
+}
+
+.cu-w-500-px{
+  width: 500px !important;
+}
+
+/**
+ * POS Page Items Selected Table Resize
+ * */
+ .resizable-vertical {
+  resize: vertical;
+  overflow: auto; /* Required for the resize property to work */
+  min-height: 270px; 
+}
+
+/**
+ * No Padding for invoice tables
+ * */
+ #invoiceItemsTable input.form-control {
+    /*padding-left: 0rem;*/
+    padding-right: 0rem;
+    font-size: 18px;
+}

@@ -1,0 +1,177 @@
+#current-date {
+    font-size: 14px;
+    color: #ffffff !important;
+    margin-left: 10px;
+    padding: 5px;
+    background-color: #007bff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-large {
+    font-size: 24px;
+    margin-left: auto;
+}
+
+#opening-balance {
+    font-size: 14px;
+    color: #333;
+    margin-left: 10px;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bootstrap-timepicker-widget table td a span:before {
+    content: none !important;
+}
+
+.bootstrap-timepicker-widget table td a[data-action^="increment"] span:before {
+    content: "\25B2" !important;
+    display: block;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.bootstrap-timepicker-widget table td a[data-action^="decrement"] span:before {
+    content: "\25BC" !important;
+    display: block;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.bootstrap-timepicker-widget table td a i {
+    display: none !important;
+}
+
+.bootstrap-timepicker-widget table td:last-child a {
+    display: none !important;
+}
+
+.bootstrap-timepicker-widget table td:last-child a[data-action^="increment"] span:before {
+    content: "\25B2" !important;
+    display: block;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.custom-col-45 {
+    flex: 0 0 45% !important;
+    max-width: 45% !important;
+}
+
+.card-body>.d-flex {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.card-body>.d-flex>.separator {
+    width: 1px;
+    background-color: #dee2e6;
+    align-self: stretch;
+    margin: 0 1rem;
+}
+
+.card-header .collapse-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--bs-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: background-color 0.2s ease;
+}
+
+.card-header .collapse-btn,
+.card-header .collapse-btn:hover,
+.card-header .collapse-btn:focus,
+.card-header .collapse-btn:active,
+.card-header .collapse-btn:focus-visible {
+    background-color: var(--bs-primary) !important;
+    color: #fff !important;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.card-header .collapse-btn i {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.close-button {
+    margin-right: 0 !important;
+}
+
+.tr-p {
+    padding: 8px !important;
+}
+
+.table-3-tr-1 {
+    background: #d2d6de !important;
+}
+
+.table-3-tr-2 {
+    background: #d2d6de !important;
+}
+
+.table-bordered tr.bg-green {
+    background: #00a65a !important;
+}
+
+.table-bordered tr.bg-green td {
+    color: white !important;
+}
+
+.bg-red {
+    background: #dd4b39 !important;
+}
+
+.bg-red td {
+    color: white !important;
+}
+
+.bg-blue {
+    background-color: #0073b7 !important;
+}
+
+.bg-blue td {
+    color: white !important;
+}
+
+.bg-yellow {
+    background-color: #f39c12 !important;
+}
+
+.bg-yellow h4 {
+    color: white !important;
+}
+
+.close {
+    background-color: red !important;
+    border-color: red !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.close:hover {
+    background-color: #bb2d3b !important;
+    border-color: #b02a37 !important;
+}
+
+.move-down {
+    margin-top: 32px !important;
+}
+
+.datepicker-edit,
+.input-group-text {
+    pointer-events: none;
+}

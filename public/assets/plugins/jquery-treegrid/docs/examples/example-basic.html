@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jquery-treegrid basic example</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/default.min.css">
+    <link rel="stylesheet" href="../../css/jquery.treegrid.css">
+
+    <script src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery.treegrid.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('.tree').treegrid();
+      });
+    </script>
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+	  
+
+      <h1><a href="http://maxazan.github.io/jquery-treegrid/">TreeGrid</a> Basic example</h1>
+
+      <table class="tree">
+        <tr class="treegrid-1">
+          <td>Root node</td>
+          <td>Additional info</td>
+        </tr>
+
+        
+        <tr class="treegrid-2 treegrid-parent-1">
+          <td>Node 1-1</td><td>Additional info</td>
+        </tr>
+        <tr class="treegrid-3 treegrid-parent-1">
+          <td>Node 1-2</td><td>Additional info</td>
+        </tr>
+        <tr class="treegrid-4 treegrid-parent-3">
+          <td>Node 1-2-1</td><td>Additional info</td>
+        </tr>
+        <tr class="treegrid-5 treegrid-parent-3">
+          <td>Node 1-2-1</td><td>Additional info</td>
+        </tr>
+
+      </table>	  
+
+    
+    </div>
+
+   
+
+  </body>
+</html>

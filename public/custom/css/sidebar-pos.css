@@ -1,0 +1,102 @@
+.sidebar-pos {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.3s;
+    color: #222;
+}
+.sidebar-pos-header {
+    width: 100%;
+    background: #fff;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.sidebar-pos-close {
+    font-size: 28px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-left: 0;
+    margin-bottom: 4px;
+}
+.sidebar-pos-content {
+    padding: 16px;
+}
+.sidebar-pos.open {
+    width: 350px;
+}
+.sidebar-pos-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(220, 220, 220, 0.7);
+    z-index: 9998;
+    transition: 0.3s;
+    display: none;
+}
+.sidebar-pos.open ~ .sidebar-pos-overlay,
+.sidebar-pos-overlay.active {
+    display: block;
+}
+.sidebar-pos-sale-item {
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+}
+.sidebar-pos-invoice-status {
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #ffe5b4;
+    color: #b36b00;
+    font-weight: bold;
+}
+.sidebar-pos-action-btn {
+    display: inline-block;
+    border: none;
+    background: #f5f5f5;
+    color: #555;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: background 0.2s;
+}
+.sidebar-pos-action-btn:hover {
+    background: #e0e0e0;
+}
+.sidebar-pos-action-btn i {
+    pointer-events: none;
+}
+.sidebar-pos-invoice-actions {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-pos-buttons {
+    display: flex;
+    gap: 4px;
+    margin-left: 33px;
+}
+
+.sidebar-pos-action-btn[title="Finish"] {
+    background: #a3d4a5;
+}
+
+.sidebar-pos-action-btn[title="Delete"] {
+    background: #e99a9f;
+}
+
+.sidebar-pos-action-btn[title="Return"] {
+    background: #8fc1c9;
+}

@@ -1,0 +1,18 @@
+.cs-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.cs-table td, #cs-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.cs-table th {
+  border: 1px solid #ddd;
+}
+
+.text-danger {
+  color: red;
+}
+

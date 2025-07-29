@@ -1,0 +1,50 @@
+@media print {
+            body {
+                width: 100%;
+                margin: 0 auto;
+                padding: 0;
+            }
+            .invoice-wrapper {
+                page-break-after: always;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+        .container {
+            max-width: 80mm;
+            margin: 0 auto;
+        }
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .invoice-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .table {
+            font-size: 12px;
+        }
+        .table th, .table td {
+            padding: 2px;
+        }
+        .footer {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 10px;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .print-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }

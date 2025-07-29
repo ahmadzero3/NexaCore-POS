@@ -1,0 +1,155 @@
+:root {
+    --start-align: left;
+    --end-align: right;
+}
+
+[dir="rtl"] {
+    --start-align: right;
+    --end-align: left;
+}
+
+body {
+    width: 1000px;
+    margin: 3px auto;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+.invoice {
+    border: 1px solid #000;
+    padding: 20px;
+    margin-top: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.address {
+    background-color: #e6e6fa;
+    width: 49%;
+    float: var(--start-align);
+    padding: 15px;
+}
+.address:first-child {
+    margin-inline-end: 20px;
+}
+.custom-table th {
+    background-color: #e6e6fa;
+}
+.terms-and-conditions {
+    background-color: #e6e6fa;
+    padding: 15px;
+    margin-top: 20px;
+}
+.signature {
+    margin-top: 50px;
+    text-align: var(--end-align);
+    float: var(--end-align);
+    width: 50%;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.company-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.company-logo {
+    width: 100px;
+    height: auto;
+    order: 1;
+}
+.company-name {
+    text-align: center;
+    flex-grow: 1;
+    order: 2;
+}
+.bill-info {
+    text-align: var(--end-align);
+    order: 3;
+}
+[dir="rtl"] .company-logo {
+    order: 3;
+}
+[dir="rtl"] .bill-info {
+    order: 1;
+}
+.bill-number {
+    font-size: 24px;
+    font-weight: bold;
+}
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.bank-details, .signature-box {
+    width: 48%;
+    box-sizing: border-box;
+    min-height: 150px; /* Adjust this value as needed */
+    display: flex;
+    flex-direction: column;
+}
+.bank-details {
+    align-items: flex-start;
+}
+.signature-content {
+    margin-top: auto;
+    text-align: right;
+}
+.signature-box {
+    text-align: center; /* center the content horizontally */
+}
+
+.signature-image {
+    width: 100px; /* adjust the width to your liking */
+    height: auto;
+    margin-bottom: 10px; /* add some space between the image and the text */
+}
+
+.custom-table td {
+  font-size: 14px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 18px;
+    margin: 0px;
+}
+
+.company-contact {
+    margin-bottom: 0;
+}
+
+.address-container {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.address-box {
+    flex: 1;
+}
+
+.invoice-note {
+    font-weight: bold;
+}
+
+.footer-label {
+    text-align: right;
+    font-weight: bold;
+}
+
+.tax-breakdown {
+    margin-top: 20px;
+}
+
+.table-compact td, .table-compact th {
+  padding: 0.25rem; /* Adjust this value as needed */
+  font-size: 0.875rem; /* Optional: reduce font size */
+  line-height: 1.2; /* Optional: reduce line height */
+}
+
+.cu-fs-1 {
+    font-size: 13px;
+    line-height: 1;
+  }

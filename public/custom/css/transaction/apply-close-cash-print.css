@@ -1,0 +1,88 @@
+.receipt {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+.header {
+    margin-bottom: 10px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-top .date,
+.header-top .time {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.logo-text {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.header-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.header-bottom .user {
+    display: inline-block;
+    font-size: 12px;
+    color: #666;
+}
+
+.table-three {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-three td {
+    padding: 4px;
+    border-bottom: 1px dashed #000;
+}
+
+.table-three tr:nth-last-child(2) td {
+    border-bottom: 1px solid #000;
+}
+
+.table-three tr:last-child td {
+    border-bottom: none;
+}
+
+.tr-p {
+    text-align: left;
+}
+
+
+.footer {
+    display: flex;
+    margin-top: 2px;
+}
+
+.left-section,
+.right-section {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+}
+
+.left-section {
+    text-align: left;
+}
+
+.right-section {
+    text-align: right;
+}
