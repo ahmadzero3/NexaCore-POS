@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+    # PHP-FPM service
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile.app
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "9000:9000"
+        environment:
+            # Ensure these match your .env file or are set as needed
+            - DB_CONNECTION=pgsql
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_DATABASE=laravel
+            - DB_USERNAME=postgres
+            - DB_PASSWORD=postgres
+        depends_on:
+            - db
+
+    # Nginx service
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile.nginx
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - app
+
+    # PostgreSQL database service
+    db:
+        image: postgres:13-alpine
+        ports:
+            - "5433:5432"
+        environment:
+            POSTGRES_DB: laravel
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                ["CMD-SHELL", "pg_isready -U postgres -d laravel"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    db_data:

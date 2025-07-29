@@ -18,7 +18,7 @@ class InstallationStatusCheck
         $installationStatus = (bool) env('INSTALLATION_STATUS') === false;
 
         if ($installationStatus) {
-            return redirect('/instal');
+            return redirect('/install');
         }
 
         return $next($request);

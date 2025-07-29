@@ -130,12 +130,12 @@
                     @endif
                 </div>
 
-                <!-- Add Envato Username input box mandatory -->
+                <!-- Add Envato Username input box optional -->
                 <div class="form-group {{ $errors->has('envato_username') ? ' has-error ' : '' }}">
                     <label for="envato_username">
-                        Envato Username <span class="text-danger text-sm">(Required)</span>
+                        Envato Username <span class="text-muted text-sm">(Optional - Leave empty if you don't have Envato account)</span>
                     </label>
-                    <input type="text" name="envato_username" id="envato_username" value="" placeholder="Enter Envato Username" />
+                    <input type="text" name="envato_username" id="envato_username" value="" placeholder="Enter Envato Username (Optional)" />
                     @if ($errors->has('envato_username'))
                         <span class="error-block">
                             <i class="fa fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
@@ -158,12 +158,12 @@
                     @endif
                  </div>
 
-                 <!-- Add Envato Purchase Code input box mandatory -->
+                 <!-- Add Envato Purchase Code input box optional -->
                  <div class="form-group {{ $errors->has('envato_purchase_code') ? ' has-error ' : '' }}">
                     <label for="envato_purchase_code">
-                        Envato Purchase Code <span class="text-danger text-sm">(Required)</span>
+                        Envato Purchase Code <span class="text-muted text-sm">(Optional - Leave empty if you don't have Envato account)</span>
                     </label>
-                    <input type="text" name="envato_purchase_code" id="envato_purchase_code" value="" placeholder="Enter Envato Purchase Code"  />
+                    <input type="text" name="envato_purchase_code" id="envato_purchase_code" value="" placeholder="Enter Envato Purchase Code (Optional)"  />
                     @if ($errors->has('envato_purchase_code'))
                         <span class="error-block">
                             <i class="fa fa-fw fa-exclamation-triangle" aria-hidden="true"></i>

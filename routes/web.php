@@ -96,7 +96,7 @@ use App\Models\Sale\SaleOrder;
 
 Route::get('/', function () {
         return redirect('/login');
-});
+})->middleware('installationStatus');
 
 if (config('demo.enabled')) {
         Route::get('/app/clear_cache', [AppSettingsController::class, 'clearCache']);
