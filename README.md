@@ -171,6 +171,139 @@ After completing the web installer, update your `.env` file:
 INSTALLATION_STATUS=true
 ```
 
+## Production Deployment
+
+For production environments, additional configuration and security measures are required.
+
+### Production Setup
+
+#### 1. Environment Configuration
+
+Create a production `.env` file with the following settings:
+
+```env
+# Application settings
+APP_NAME="NexaCore POS"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-domain.com
+APP_KEY=base64:your-generated-key
+
+# Installation status
+INSTALLATION_STATUS=true
+
+# Database configuration (use your production database)
+DB_CONNECTION=pgsql
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_DATABASE=your-production-db
+DB_USERNAME=your-db-user
+DB_PASSWORD=your-secure-password
+
+# Mail configuration
+MAIL_MAILER=smtp
+MAIL_HOST=your-smtp-host
+MAIL_PORT=587
+MAIL_USERNAME=your-email@domain.com
+MAIL_PASSWORD=your-secure-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@your-domain.com
+MAIL_FROM_NAME="NexaCore POS"
+
+# Session and cache (for production)
+SESSION_DRIVER=database
+CACHE_DRIVER=redis
+QUEUE_CONNECTION=redis
+
+# Redis configuration (optional but recommended)
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+#### 2. Production Build
+
+Run the production build:
+
+```bash
+# Build and start production environment
+make prod
+
+# Or manually:
+make build
+make up
+```
+
+#### 3. Production Considerations
+
+**Security:**
+- Use strong, unique passwords for all database and application credentials
+- Enable HTTPS/SSL certificates for your domain
+- Configure firewall rules to restrict access to necessary ports only
+- Regularly update Docker images and dependencies
+
+**Performance:**
+- Use a production-grade database server (not the Docker PostgreSQL for high-traffic)
+- Configure Redis for caching and session storage
+- Set up proper logging and monitoring
+- Consider using a reverse proxy like Nginx or Traefik
+
+**Backup:**
+- Implement regular database backups
+- Backup uploaded files and application data
+- Test backup restoration procedures
+
+**Monitoring:**
+- Set up application monitoring and alerting
+- Monitor Docker container health
+- Track application performance metrics
+
+#### 4. Production Docker Compose (Optional)
+
+For advanced production setups, create a `docker-compose.prod.yml`:
+
+```yaml
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./public:/var/www/html/public
+      # Add SSL certificates
+      - ./ssl:/etc/nginx/ssl
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+```
+
+Then run: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+
 ### Using the Makefile
 
 A `Makefile` has been created to simplify common Docker commands. For detailed instructions on how to use the `Makefile` and its various commands (development, production, build, up, down, install, key, migrate, artisan, clean), please refer to the <mcfile name="make-steps.md" path="/Users/karimhamadeh/Dev/NexaCore-POS/make-steps.md"></mcfile> file.
