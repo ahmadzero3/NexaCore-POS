@@ -1,6 +1,10 @@
 # Use the official PHP-FPM image with Alpine Linux for a smaller image size
 FROM php:8.2-fpm-alpine
 
+# Create www-data user with proper UID/GID to match host system
+RUN if ! getent group www-data > /dev/null 2>&1; then addgroup -g 1000 -S www-data; fi && \
+    if ! getent passwd www-data > /dev/null 2>&1; then adduser -u 1000 -D -S -G www-data www-data; fi
+
 # Install system dependencies and PHP extensions
 # These extensions are commonly required by Laravel and its packages
 RUN apk add --no-cache \
@@ -65,12 +69,27 @@ RUN mkdir -p /var/www/html/storage/framework/cache \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/storage/framework \ 
-    && chmod -R 775 /var/www/html/storage/logs \ 
     && chmod -R 775 /var/www/html/bootstrap/cache
+
+# Create entrypoint script to fix permissions on startup
+RUN echo '#!/bin/sh' > /entrypoint.sh && \
+    echo '# Fix permissions for Laravel directories' >> /entrypoint.sh && \
+    echo 'if [ "$(id -u)" = "0" ]; then' >> /entrypoint.sh && \
+    echo '    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true' >> /entrypoint.sh && \
+    echo '    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true' >> /entrypoint.sh && \
+    echo '    # Fix permissions for installed file if it exists' >> /entrypoint.sh && \
+    echo '    if [ -f /var/www/html/storage/installed ]; then' >> /entrypoint.sh && \
+    echo '        chown www-data:www-data /var/www/html/storage/installed 2>/dev/null || true' >> /entrypoint.sh && \
+    echo '        chmod 664 /var/www/html/storage/installed 2>/dev/null || true' >> /entrypoint.sh && \
+    echo '    fi' >> /entrypoint.sh && \
+    echo 'fi' >> /entrypoint.sh && \
+    echo 'exec "$@"' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Start PHP-FPM
 CMD ["php-fpm"]

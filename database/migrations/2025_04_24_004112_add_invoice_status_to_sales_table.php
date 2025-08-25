@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('invoice_status')->default('pending');
-        });
+        if (Schema::hasTable('sales') && !Schema::hasColumn('sales', 'invoice_status')) {
+            Schema::table('sales', function (Blueprint $table) {
+                $table->string('invoice_status')->default('pending');
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('invoice_status');
-        });
+        if (Schema::hasTable('sales')) {
+            Schema::table('sales', function (Blueprint $table) {
+                $table->dropColumn('invoice_status');
+            });
+        }
     }
 };

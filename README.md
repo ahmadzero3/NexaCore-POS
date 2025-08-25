@@ -7,43 +7,51 @@ NexaCore-POS is a comprehensive Point of Sale (POS) system built with Laravel, d
 Based on the application's structure, NexaCore-POS is designed to handle the following core functionalities:
 
 ### Sales Management
-*   **Order Processing**: Efficiently create and manage customer orders.
-*   **Product Sales**: Handle the sale of various items, including pricing and quantity management.
-*   **Tax Calculation**: Apply and manage taxes on sales transactions.
+
+-   **Order Processing**: Efficiently create and manage customer orders.
+-   **Product Sales**: Handle the sale of various items, including pricing and quantity management.
+-   **Tax Calculation**: Apply and manage taxes on sales transactions.
 
 ### Purchase Management
-*   **Supplier Management**: Keep track of suppliers and their details.
-*   **Purchase Orders**: Create and manage purchase orders for inventory replenishment.
+
+-   **Supplier Management**: Keep track of suppliers and their details.
+-   **Purchase Orders**: Create and manage purchase orders for inventory replenishment.
 
 ### Inventory Management
-*   **Item Management**: Define and manage various items, including their units and categories.
-*   **Stock Control**: Monitor and update stock levels for all items.
+
+-   **Item Management**: Define and manage various items, including their units and categories.
+-   **Stock Control**: Monitor and update stock levels for all items.
 
 ### Financial Management
-*   **Account Management**: Manage different financial accounts within the system.
-*   **Expense Tracking**: Record and categorize business expenses.
-*   **Payment Processing**: Handle various payment methods for sales and purchases.
+
+-   **Account Management**: Manage different financial accounts within the system.
+-   **Expense Tracking**: Record and categorize business expenses.
+-   **Payment Processing**: Handle various payment methods for sales and purchases.
 
 ### User and Role Management
-*   **User Accounts**: Create and manage user accounts with different access levels.
-*   **Role-Based Access Control**: Assign roles to users to control their permissions within the system.
+
+-   **User Accounts**: Create and manage user accounts with different access levels.
+-   **Role-Based Access Control**: Assign roles to users to control their permissions within the system.
 
 ### Customer and Party Management
-*   **Customer Database**: Maintain a database of customer information.
-*   **Party Management**: Manage other relevant parties involved in business operations.
+
+-   **Customer Database**: Maintain a database of customer information.
+-   **Party Management**: Manage other relevant parties involved in business operations.
 
 ### Reporting and Analytics
-*   The system is structured to support various reports related to sales, purchases, expenses, and inventory, providing insights into business performance.
+
+-   The system is structured to support various reports related to sales, purchases, expenses, and inventory, providing insights into business performance.
 
 ### Multi-language Support
-*   The application supports multiple languages (Arabic, English, Hindi), allowing for a localized user experience.
+
+-   The application supports multiple languages (Arabic, English, Hindi), allowing for a localized user experience.
 
 ## Technology Stack
 
-*   **Backend**: Laravel (PHP Framework)
-*   **Frontend**: JavaScript, CSS (likely with Tailwind CSS based on `tailwind.config.js`)
-*   **Build Tool**: Vite
-*   **Dependency Management**: Composer (PHP), npm/Yarn (Node.js)
+-   **Backend**: Laravel (PHP Framework)
+-   **Frontend**: JavaScript, CSS (likely with Tailwind CSS based on `tailwind.config.js`)
+-   **Build Tool**: Vite
+-   **Dependency Management**: Composer (PHP), npm/Yarn (Node.js)
 
 ## Installation and Setup
 
@@ -51,7 +59,7 @@ NexaCore-POS can be set up using Docker in two ways: **Quick Setup (Recommended 
 
 ### Prerequisites
 
-*   Docker Desktop (or Docker Engine and Docker Compose) installed on your system.
+-   Docker Desktop (or Docker Engine and Docker Compose) installed on your system.
 
 ### Option 1: Quick Docker Setup (Recommended)
 
@@ -80,10 +88,14 @@ APP_URL=http://localhost
 # Database configuration for Docker
 DB_CONNECTION=pgsql
 DB_HOST=db
-DB_PORT=5432
+DB_PORT=5432  # Internal port (see .env.docker for external port configuration)
 DB_DATABASE=laravel
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
+
+# Note: To connect to the database from outside Docker:
+# Check the EXTERNAL_DB_PORT value in .env.docker file
+# Default: Host: localhost, Port: 5433, Database: laravel
 
 # Mail configuration (optional)
 MAIL_MAILER=smtp
@@ -116,8 +128,9 @@ make seed
 Once setup is complete, access the application at `http://localhost`
 
 **Default Admin Credentials:**
-- Email: `admin@example.com`
-- Password: `12345678`
+
+-   Email: `admin@example.com`
+-   Password: `12345678`
 
 ### Option 2: Web Installer Setup
 
@@ -135,10 +148,10 @@ Configure the `.env` file:
 # Enable web installer
 INSTALLATION_STATUS=false
 
-# Database configuration
+# Database configuration for Docker
 DB_CONNECTION=pgsql
 DB_HOST=db
-DB_PORT=5432
+DB_PORT=5432  # Internal port (see .env.docker for external port configuration)
 DB_DATABASE=laravel
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
@@ -154,14 +167,14 @@ make dev
 
 1. Navigate to `http://localhost/install`
 2. Follow the installation wizard:
-   - **Requirements**: Verify server requirements
-   - **Permissions**: Confirm directory permissions
-   - **Environment**: Configure application settings
-     - App Name: `NexaCore POS`
-     - Database: Use the PostgreSQL settings above
-     - Admin Email: Your email address
-     - **Envato Fields**: Leave empty (optional - username/purchase code not required)
-   - **Final**: Complete installation
+    - **Requirements**: Verify server requirements
+    - **Permissions**: Confirm directory permissions
+    - **Environment**: Configure application settings
+        - App Name: `NexaCore POS`
+        - Database: Use the PostgreSQL settings above
+        - Admin Email: Your email address
+        - **Envato Fields**: Leave empty (optional - username/purchase code not required)
+    - **Final**: Complete installation
 
 #### 4. Post-Installation
 
@@ -195,7 +208,7 @@ INSTALLATION_STATUS=true
 # Database configuration (use your production database)
 DB_CONNECTION=pgsql
 DB_HOST=your-db-host
-DB_PORT=5432
+DB_PORT=5433
 DB_DATABASE=your-production-db
 DB_USERNAME=your-db-user
 DB_PASSWORD=your-secure-password
@@ -237,26 +250,30 @@ make up
 #### 3. Production Considerations
 
 **Security:**
-- Use strong, unique passwords for all database and application credentials
-- Enable HTTPS/SSL certificates for your domain
-- Configure firewall rules to restrict access to necessary ports only
-- Regularly update Docker images and dependencies
+
+-   Use strong, unique passwords for all database and application credentials
+-   Enable HTTPS/SSL certificates for your domain
+-   Configure firewall rules to restrict access to necessary ports only
+-   Regularly update Docker images and dependencies
 
 **Performance:**
-- Use a production-grade database server (not the Docker PostgreSQL for high-traffic)
-- Configure Redis for caching and session storage
-- Set up proper logging and monitoring
-- Consider using a reverse proxy like Nginx or Traefik
+
+-   Use a production-grade database server (not the Docker PostgreSQL for high-traffic)
+-   Configure Redis for caching and session storage
+-   Set up proper logging and monitoring
+-   Consider using a reverse proxy like Nginx or Traefik
 
 **Backup:**
-- Implement regular database backups
-- Backup uploaded files and application data
-- Test backup restoration procedures
+
+-   Implement regular database backups
+-   Backup uploaded files and application data
+-   Test backup restoration procedures
 
 **Monitoring:**
-- Set up application monitoring and alerting
-- Monitor Docker container health
-- Track application performance metrics
+
+-   Set up application monitoring and alerting
+-   Monitor Docker container health
+-   Track application performance metrics
 
 #### 4. Production Docker Compose (Optional)
 
@@ -266,40 +283,40 @@ For advanced production setups, create a `docker-compose.prod.yml`:
 version: "3.8"
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.app
-    volumes:
-      - ./storage:/var/www/html/storage
-      - ./bootstrap/cache:/var/www/html/bootstrap/cache
-    environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-    restart: unless-stopped
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile.app
+        volumes:
+            - ./storage:/var/www/html/storage
+            - ./bootstrap/cache:/var/www/html/bootstrap/cache
+        environment:
+            - APP_ENV=production
+            - APP_DEBUG=false
+        restart: unless-stopped
 
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./storage:/var/www/html/storage
-      - ./public:/var/www/html/public
-      # Add SSL certificates
-      - ./ssl:/etc/nginx/ssl
-    restart: unless-stopped
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile.nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./storage:/var/www/html/storage
+            - ./public:/var/www/html/public
+            # Add SSL certificates
+            - ./ssl:/etc/nginx/ssl
+        restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
+    redis:
+        image: redis:7-alpine
+        restart: unless-stopped
+        volumes:
+            - redis_data:/data
 
 volumes:
-  redis_data:
+    redis_data:
 ```
 
 Then run: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
@@ -310,10 +327,10 @@ A `Makefile` has been created to simplify common Docker commands. For detailed i
 
 ### Troubleshooting
 
-- **Permission Errors**: Ensure Docker has proper file permissions
-- **Database Connection**: Verify PostgreSQL container is running with `docker ps`
-- **Port Conflicts**: Change the port in `docker-compose.yml` if port 80 is in use
-- **Installer Issues**: Use Option 1 (Quick Setup) to bypass web installer completely
+-   **Permission Errors**: Ensure Docker has proper file permissions
+-   **Database Connection**: Verify PostgreSQL container is running with `docker ps`
+-   **Port Conflicts**: Change the port in `docker-compose.yml` if port 80 is in use
+-   **Installer Issues**: Use Option 1 (Quick Setup) to bypass web installer completely
 
 ## Usage
 

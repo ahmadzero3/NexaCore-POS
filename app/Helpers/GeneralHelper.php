@@ -41,7 +41,10 @@ if (!function_exists('getDatabaseMigrationAppVersion')) {
             ->select('version')
             ->orderBy('id', 'desc')
             ->first();
+        
+        if ($appVersion && isset($appVersion->version)) {
             return $appVersion->version;
+        }
 
         return env('APP_VERSION', '1.0.0'); // Default version if not set in .env
     }
