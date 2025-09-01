@@ -35,6 +35,8 @@ use App\Enums\ItemTransactionUniqueCode;
 use App\Models\Sale\Quotation;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
+use App\Models\Payment\PaymentType;
+use App\Models\PaymentTypes;
 
 use Mpdf\Mpdf;
 
@@ -494,9 +496,6 @@ class SaleController extends Controller
         $mpdf->Output($fileName, $destination);
     }
 
-    /**
-     * Store Records
-     * */
     public function store(SaleRequest $request): JsonResponse
     {
         try {
@@ -504,6 +503,23 @@ class SaleController extends Controller
             DB::beginTransaction();
             // Get the validated data from the expenseRequest
             $validatedData = $request->validated();
+
+            $paymentTypeId = $request->payment_type_id[0] ?? null;
+            $paymentTypeName = null;
+            if ($paymentTypeId) {
+                $paymentType = PaymentTypes::find($paymentTypeId);
+                $paymentTypeName = $paymentType ? $paymentType->name : null;
+            }
+
+            // Calculate change return
+            $changeReturn = 0;
+            $totalPayment = array_sum($request->payment_amount);
+            if ($totalPayment > $request->grand_total) {
+                $changeReturn = $totalPayment - $request->grand_total;
+            }
+
+            // Calculate balance
+            $balance = $request->grand_total - $totalPayment;
 
             // Check for pending invoices
             $pendingCount = Sale::where('invoice_status', 'pending')->count();
@@ -518,6 +534,10 @@ class SaleController extends Controller
                 // Create a new sale record using Eloquent and save it
                 $newSale = new Sale($validatedData);
                 $newSale->invoice_status = $request->input('invoice_status', 'pending');
+                $newSale->payment_type = $paymentTypeName;
+                $newSale->payment_amount = $request->payment_amount[0] ?? 0;
+                $newSale->change_return = $changeReturn;
+                $newSale->balance = $balance;
                 $newSale->save();
 
                 $request->request->add(['sale_id' => $newSale->id]);
@@ -535,6 +555,10 @@ class SaleController extends Controller
                     'state_id'              => $validatedData['state_id'],
                     'currency_id'           => $validatedData['currency_id'],
                     'exchange_rate'         => $validatedData['exchange_rate'],
+                    'payment_type'          => $paymentTypeName,
+                    'payment_amount'        => $request->payment_amount[0] ?? 0,
+                    'change_return'         => $changeReturn,
+                    'balance'               => $balance,
                 ];
 
                 $newSale = Sale::findOrFail($validatedData['sale_id']);
@@ -610,8 +634,6 @@ class SaleController extends Controller
                 throw new \Exception(__('payment.paid_amount_should_not_be_less_than_zero'));
             }
 
-
-
             /**
              * Paid amount should not be greater than grand total
              * */
@@ -621,11 +643,19 @@ class SaleController extends Controller
 
             /**
              * Update Sale Model
-             * Total Paid Amunt
+             * Total Paid Amount and Balance
              * */
             if (!$this->paymentTransactionService->updateTotalPaidAmountInModel($request->modelName)) {
                 throw new \Exception(__('payment.failed_to_update_paid_amount'));
             }
+
+            // Refresh the model to get updated paid_amount
+            $newSale->refresh();
+
+            // Recalculate balance based on actual paid amount
+            $actualBalance = $newSale->grand_total - $newSale->paid_amount;
+            $newSale->balance = $actualBalance;
+            $newSale->save();
 
             /**
              * Update Account Transaction entry

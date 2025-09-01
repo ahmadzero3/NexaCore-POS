@@ -43,7 +43,7 @@
                                             </div>
                                             <div class="col-md-9">
                                                 <x-label for="search_item" name="{{ __('item.item_name') }}" />
-                                                <div class="input-group mb-3"> 
+                                                <div class="input-group mb-3">
                                                     <span class="input-group-text" id="basic-addon1"><i class="fadeIn animated bx bx-barcode-reader text-primary"></i></span>
                                                     <input type="text" id="search_item" value="" class="form-control" required placeholder="Scan Barcode/Search Items">
                                                 </div>
@@ -81,7 +81,7 @@
                                     </div>
                                     <div class="card-body p-4 row g-3">
                                             <div class="col-md-12">
-                                                <div class="d-md-flex d-grid align-items-center gap-3">
+                                                <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                     <x-button type="button" class="primary px-4" buttonId="generate" text="{{ __('app.generate') }}" />
                                                     <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                                 </div>
@@ -100,11 +100,11 @@
                                             <button type="button" class="btn btn-outline-success printIFrame">{{ __('app.print') }}</button>
                                         </div>
                                         </div>
-                                   
+
                                 </div>
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12 table-responsive">
-                                            
+
                                             <!-- <div id="labels-container" class="print-only"></div> -->
                                             <iframe id="barcodeIframe" src="{{ route('generate.labels') }}" width="100%" height="500" frameborder="0"></iframe>
                                         </div>

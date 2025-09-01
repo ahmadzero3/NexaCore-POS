@@ -18,7 +18,7 @@
                         <input type="hidden" id="base_url" value="{{ url('/') }}">
                         <div class="col-12 col-lg-12">
                             @include('layouts.session')
-                            
+
                             <div class="card">
                                 <div class="card-header px-4 py-3">
                                     <h5 class="mb-0">{{ __('party.import_contacts') }}</h5>
@@ -33,14 +33,14 @@
                                             <x-label for="excel_file" name="{{ __('app.browse_file') }}" />
                                             <input class="form-control" type="file" id="excel_file" name="excel_file">
                                         </div>
-                                        
-                                        
-                                        
+
+
+
                                 </div>
 
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </form>
                 </div>
 
@@ -62,5 +62,5 @@
 @section('js')
     @include("plugin.export-table")
     <script src="{{ versionedAsset('custom/js/import/party.js') }}"></script>
-    
+
 @endsection

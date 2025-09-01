@@ -1704,3 +1704,97 @@ document.addEventListener("DOMContentLoaded", function () {
     // Ensure hidden by default
     calcPopup.style.display = "none";
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+    let customerDisplayWindow = null;
+
+    // Open customer display window
+    function openCustomerDisplay() {
+        const url = window.customerDisplayRoute;
+        // Bigger size + positioned on right side
+        const width = 700;
+        const height = 800;
+        const left = screen.width - width - 20;
+        const top = 50;
+        customerDisplayWindow = window.open(
+            url,
+            'customer_display',
+            `width=${width},height=${height},left=${left},top=${top}`
+        );
+
+        // Fallback in case popup blocked
+        if (!customerDisplayWindow || customerDisplayWindow.closed || typeof customerDisplayWindow.closed ==
+            'undefined') {
+            console.warn('Customer display window was blocked. Please allow popups for this site.');
+        }
+    }
+
+    // Send data to customer display
+    function updateCustomerDisplay() {
+        if (!customerDisplayWindow || customerDisplayWindow.closed) return;
+
+        const items = [];
+        $('#invoiceItemsTable tbody tr').not('.default-row').each(function() {
+            const name = $(this).find('td:eq(0) label.form-label').text().trim();
+            const quantity = $(this).find('input[name^="quantity"]').val();
+            const unitPrice = $(this).find('input[name^="sale_price"]').val();
+            const total = $(this).find('input[name^="total"]').val();
+
+            if (name && quantity) {
+                items.push({
+                    name,
+                    quantity,
+                    unitPrice,
+                    total
+                });
+            }
+        });
+
+        const totals = {
+            subtotal: $('#totalPrice').text(),
+            tax: $('#totalTax').text(),
+            discount: $('#totalDiscount').text(),
+            grandTotal: $('input[name="grand_total"]').val()
+        };
+
+        customerDisplayWindow.postMessage({
+            type: 'UPDATE_CUSTOMER_DISPLAY',
+            items,
+            totals
+        }, '*');
+    }
+
+    // Open customer display on load
+    openCustomerDisplay();
+
+    // Always reopen if closed
+    setInterval(function() {
+        if (!customerDisplayWindow || customerDisplayWindow.closed) {
+            openCustomerDisplay();
+            setTimeout(updateCustomerDisplay, 1000);
+        }
+    }, 2000);
+
+    // Update customer display when items change
+    const observer = new MutationObserver(updateCustomerDisplay);
+    const targetNode = document.getElementById('invoiceItemsTable');
+    if (targetNode) {
+        observer.observe(targetNode, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    $(document).on('change', '#invoiceItemsTable input, input[name^="payment_amount"]',
+        updateCustomerDisplay);
+
+    // Listen for messages from display
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'CUSTOMER_DISPLAY_READY') {
+            setTimeout(updateCustomerDisplay, 500);
+        }
+    });
+
+    // Initial update
+    setTimeout(updateCustomerDisplay, 1000);
+});

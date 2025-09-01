@@ -86,7 +86,7 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>
@@ -163,7 +163,7 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" buttonId="smtpSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>
@@ -232,7 +232,7 @@
 
 
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" buttonId="generalSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>
@@ -409,7 +409,7 @@
                                               </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" buttonId="itemSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -438,6 +438,18 @@
                                               {{ __('app.show_tax_summary') }}
                                             </label>
                                           </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" {{ ($company->enable_print_tax) ? 'checked' : '' }} id="enable_print_tax" name="enable_print_tax">
+                                            <label class="form-check-label" for="enable_print_tax">{{ __('app.enable_print_tax') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" {{ ($company->enable_print_discount) ? 'checked' : '' }} id="enable_print_discount" name="enable_print_discount">
+                                            <label class="form-check-label" for="enable_print_discount">{{ __('app.enable_print_discount') }}</label>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-check">
@@ -481,7 +493,7 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" buttonId="generalSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>
@@ -518,7 +530,7 @@
                                               </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" buttonId="moduleSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>

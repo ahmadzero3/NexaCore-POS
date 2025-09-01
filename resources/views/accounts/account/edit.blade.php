@@ -24,7 +24,7 @@
 
                                     <input type="hidden" name='id' value="{{ $account->id }}" />
                                     <input type="hidden" id="base_url" value="{{ url('/') }}">
-                                   
+
                                     <div class="col-md-6">
                                         <x-label for="name" name="{{ __('app.name') }}" />
                                         <x-input type="text" name="name" :required="true" value="{{ $account->name }}"/>
@@ -38,7 +38,7 @@
                                         <x-textarea name="description" value="{{ $account->description }}"/>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>

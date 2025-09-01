@@ -20,7 +20,7 @@
                                     {{-- CSRF Protection --}}
                                     @csrf
                                     @method('POST')
-                                    
+
                                     <div class="col-md-12">
                                         <x-label for="mobile_numbers" name="{{ __('message.mobile_number') }}" />
                                         <x-input type="text" name="mobile_numbers" :required="true" value="" placeholder="{{ __('message.comma_separator_for_multiple_numbers') }}" :autofocus='true'/>
@@ -30,7 +30,7 @@
                                         <x-textarea name="message" value="" textRows="10"/>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('message.send') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>

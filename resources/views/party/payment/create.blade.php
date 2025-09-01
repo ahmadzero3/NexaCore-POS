@@ -28,7 +28,7 @@
                                     </div>
                                     <!-- Button pushed to the right side -->
                                     <x-anchor-tag href="{{ route('party.transaction.list', ['id' => $party->id, 'partyType' => $party->party_type]) }}" text="{{ __('party.transaction') }}" class="btn btn-outline-primary px-5" />
-                                    
+
                                 </div>
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-6 ">
@@ -52,7 +52,7 @@
                                             <x-label for="balance" name="{{ __('app.balance') }} <label class='text-danger'> ({{ $partyData['balance_message'] }}) </label>" />
                                             <x-input type="text" additionalClasses="" :readonly='true' name="balance" :required="false" value="{{ ($partyData['balance']) }}"/>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <x-label for="payment_type_id" name="{{ __('payment.payment_type') }}" />
                                             <select class="form-select select2 payment-type-ajax" name="payment_type_id" data-placeholder="Choose one thing"></select>
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -138,5 +138,5 @@
     @include("plugin.export-table")
     <script src="{{ versionedAsset('custom/js/common/common.js') }}"></script>
     <script src="{{ versionedAsset('custom/js/party/payment/payment.js') }}"></script>
-    
+
 @endsection

@@ -132,18 +132,9 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         try {
-            // Validate that opening_quantity is provided
-            if (!$request->has('opening_quantity') || $request->opening_quantity <= 0) {
-                return response()->json([
-                    'status' => false,
-                    'message' => __('item.opening_quantity_required'),
-                ], 409);
-            }
-
             DB::beginTransaction();
 
             $filename = null;
-
             $jsonSerialsDecode = [];
 
             /**
@@ -233,8 +224,6 @@ class ItemController extends Controller
                     //Delete Item Transaction
                     $itemTransaction->delete();
                 }
-
-
 
                 //Update the records
                 $itemModel->update($recordsToSave);
@@ -332,16 +321,11 @@ class ItemController extends Controller
                 }
             } else {
                 //Regular item transaction entry
-
-                /**
-                 * Record ItemTransactions
-                 * */
-                //if($request->opening_quantity){
-                if (!$transaction = $this->recordInItemTransactionEntry($request)) {
-                    throw new \Exception(__('item.failed_to_record_item_transactions'));
+                if ($request->opening_quantity > 0) {
+                    if (!$transaction = $this->recordInItemTransactionEntry($request)) {
+                        throw new \Exception(__('item.failed_to_record_item_transactions'));
+                    }
                 }
-                //}
-
             }
 
             /**
@@ -353,7 +337,6 @@ class ItemController extends Controller
             //Update Item Master Average Purchase Price
             $this->itemTransactionService->updateItemMasterAveragePurchasePrice([$request->itemModel->id]);
 
-            //exit;
             DB::commit();
 
             return response()->json([
@@ -361,7 +344,6 @@ class ItemController extends Controller
                 'message' => __('app.record_saved_successfully'),
                 'id' => $request->itemModel->id,
                 'name' => $request->itemModel->name,
-
             ]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -395,10 +377,6 @@ class ItemController extends Controller
             'tax_type'                  => ($request->is_sale_price_with_tax) ? 'inclusive' : 'exclusive',
             'total'                     => $request->opening_quantity * $request->at_price,
         ]);
-
-
-        //Update Account
-        //$this->accountTransactionService->itemOpeningStockTransaction($itemModel);
 
         return $transaction;
     }
@@ -811,11 +789,11 @@ class ItemController extends Controller
         $warehouseId = request('warehouse_id');
         $page = request('page', 1); // Get the page from the request, default to 1
         $sortOrder = request('sort', 'a_to_z'); // Get the sorting order from the request
-
         $showWholesalePrice = Party::select('is_wholesale_customer')
             ->find(request('party_id'))
             ?->is_wholesale_customer ?? false;
 
+        // Modified Query: Join with item_serial_masters and adjust search condition
         $itemMaster = Item::with([
             'tax',
             'brand',
@@ -823,18 +801,25 @@ class ItemController extends Controller
                 $query->where('warehouse_id', $warehouseId);
             }
         ])
+            // Join with item_serial_masters to access serial_code
+            ->leftJoin('item_serial_masters', 'items.id', '=', 'item_serial_masters.item_id')
+            // Modify the where condition to include serial_code search
             ->where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('item_code', 'LIKE', "%{$search}%");
+                $query->where('items.name', 'LIKE', "%{$search}%")
+                    ->orWhere('items.item_code', 'LIKE', "%{$search}%")
+                    ->orWhere('item_serial_masters.serial_code', 'LIKE', "%{$search}%"); // Search serial_code
             })
+            ->select('items.*') // Select only items columns to avoid conflicts
+            ->distinct() // Ensure unique items if matched by multiple criteria or serials
             ->when($categoryId, function ($query) use ($categoryId) {
-                return $query->where('item_category_id', $categoryId);
+                return $query->where('items.item_category_id', $categoryId); // Qualify column name
             })
             ->when($brandId, function ($query) use ($brandId) {
-                return $query->where('brand_id', $brandId);
+                return $query->where('items.brand_id', $brandId); // Qualify column name
             })
-            ->orderBy('name', $sortOrder === 'z_to_a' ? 'desc' : 'asc') // Apply sorting order
+            ->orderBy('items.name', $sortOrder === 'z_to_a' ? 'desc' : 'asc') // Apply sorting order, qualify column
             ->paginate(15, ['*'], 'page', $page); // Use pagination for infinite scroll
+
         $response = $this->returnRequiredFormatData($itemMaster, $showWholesalePrice);
         return response()->json($response);
     }

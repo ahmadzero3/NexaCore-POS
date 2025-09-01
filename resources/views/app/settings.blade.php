@@ -74,7 +74,7 @@
 								<div class="valid-feedback"></div>
 							</div>
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>
@@ -123,7 +123,7 @@
 							</div>
 
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>
@@ -172,7 +172,7 @@
 								<div class="valid-feedback"></div>
 							</div>
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" buttonId="smtpSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>
@@ -241,7 +241,7 @@
 												<div class="valid-feedback"></div>
 											</div>
 											<div class="col-md-12">
-												<div class="d-md-flex d-grid align-items-center gap-3">
+												<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 													<x-button type="submit" buttonId="twilioSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
 													<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 												</div>
@@ -299,7 +299,7 @@
 												<div class="valid-feedback"></div>
 											</div>
 											<div class="col-md-12">
-												<div class="d-md-flex d-grid align-items-center gap-3">
+												<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 													<x-button type="submit" buttonId="twilioSubmit" class="primary px-4" text="{{ __('app.submit') }}" />
 													<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 												</div>
@@ -337,7 +337,7 @@
 							</div>
 
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" buttonId="cacheSubmit" class="primary px-4" text="{{ __('app.clear_cache') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>
@@ -370,7 +370,7 @@
 							</div>
 
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" buttonId="appLogSubmit" class="primary px-4" text="{{ __('app.clear_log') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>
@@ -393,7 +393,7 @@
 							</div>
 
 							<div class="col-md-12">
-								<div class="d-md-flex d-grid align-items-center gap-3">
+								<div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
 									<x-button type="submit" buttonId="databaseSubmit" class="primary px-4" text="{{ __('app.download') }}" />
 									<x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
 								</div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', __('account.balance_sheet'))
-    
+
     @section('css')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" />
 
@@ -52,7 +52,7 @@
                                     <h5 class="mb-0">{{ __('app.filter') }}</h5>
                                 </div>
                                 <div class="card-body p-4 row g-3">
-                                    
+
                                         <div class="col-md-6">
                                             <x-label for="from_date" name="{{ __('app.from_date') }}" />
                                             <div class="input-group mb-3">
@@ -67,12 +67,12 @@
                                                 <span class="input-group-text" id="input-near-focus" role="button"><i class="fadeIn animated bx bx-calendar-alt"></i></span>
                                             </div>
                                         </div>
-                                        
+
                                 </div>
 
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -115,7 +115,7 @@
                                                 </tbody>
                                             </table>
 
-                                            
+
 
                                             <!-- Hidden Table to export data -->
                                             <div id="combined-table" class="d-none">
@@ -215,11 +215,11 @@
 
 function formatCurrency(amount) {
     return _parseFix(amount);
-    /*return new Intl.NumberFormat('en-US', { 
-        style: 'currency', 
+    /*return new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2 
+        maximumFractionDigits: 2
     }).format(amount);*/
 }
 
@@ -272,5 +272,5 @@ function formatCurrency(amount) {
         alert('Action for node: ' + nodeId);
     });
 });
-        </script>    
+        </script>
 @endsection

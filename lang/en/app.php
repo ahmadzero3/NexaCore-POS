@@ -232,6 +232,8 @@ return [
     'print_settings'                    => 'Print Settings',
     'show_tax_summary'                  => 'Show Tax Summary',
     'details'                           => 'Details',
+    'enable_print_tax' => 'Enable Print Tax',
+    'enable_print_discount' => 'Enable Print Discount',
 
     'amount_in_words'                   => 'Bill Amount in Words',
     'amount'                            => 'Amount',

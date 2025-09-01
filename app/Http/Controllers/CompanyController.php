@@ -129,6 +129,8 @@ class CompanyController extends Controller
         $settings = Company::findOrNew($this->companyId);
         $settings->show_tax_summary = $request->has('show_tax_summary') ? 1 : 0;
         $settings->show_terms_and_conditions_on_invoice = $request->has('show_terms_and_conditions_on_invoice') ? 1 : 0;
+        $settings->enable_print_tax = (bool) $request->has('enable_print_tax');
+        $settings->enable_print_discount = (bool) $request->has('enable_print_discount');
         $settings->show_signature_on_invoice = $request->has('show_signature_on_invoice') ? 1 : 0;
         $settings->terms_and_conditions = $request->has('terms_and_conditions') ? $request['terms_and_conditions'] : null;
         $settings->show_party_due_payment = $request->has('show_party_due_payment') ? 1 : 0;

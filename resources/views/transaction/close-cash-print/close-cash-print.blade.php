@@ -42,7 +42,7 @@
         </table>
     </div>
     <div class="footer">
-        <div class="left-section">NexaCore POS</div>
+        <div class="left-section">Synkode POS</div>
         <div class="right-section">All rights reserved</div>
     </div>
 </div>

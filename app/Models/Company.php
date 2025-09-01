@@ -38,6 +38,8 @@ class Company extends Model
         'auto_update_sale_price',
         'auto_update_purchase_price',
         'auto_update_average_purchase_price',
+        'enable_print_tax',
+        'enable_print_discount',
     ];
 
     /**

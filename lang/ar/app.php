@@ -163,6 +163,11 @@ return [
     'direction'             => 'الاتجاه',
     'short_code'            => 'الرمز القصير',
 
+    'total_dollar'          => '$ إجمالي بالدولار',
+    'total_lebanon'         => 'الإجمالي بالليرة اللبنانية ل.ل',
+    'paid_amount'           => 'المبلغ المدفوع',
+
+
 
     'emoji'             => 'الرموز التعبيرية',
     'emoji_flag'        => 'علم الرموز التعبيرية',
@@ -233,6 +238,8 @@ return [
     'print_settings' => 'إعدادات الطباعة',
     'show_tax_summary' => 'إظهار ملخص الضريبة',
     'details' => 'التفاصيل',
+    'enable_print_tax' => 'تمكين طباعة الضريبة',
+    'enable_print_discount' => 'تمكين طباعة الخصم',
 
     'amount_in_words' => 'مبلغ الفاتورة بالكلمات',
     'amount' => 'المبلغ',

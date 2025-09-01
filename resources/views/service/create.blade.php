@@ -21,16 +21,16 @@
                                     {{-- CSRF Protection --}}
                                     @csrf
                                     @method('POST')
-                                    
+
                                     <input type="hidden" id="base_url" value="{{ url('/') }}">
                                     <div class="col-md-6">
                                         <x-label for="picture" name="{{ __('app.picture') }}" />
-                                        <x-browse-image 
-                                                        src="{{ url('/service/noimage/') }}" 
-                                                        name='image' 
-                                                        imageid='uploaded-image-1' 
-                                                        inputBoxClass='input-box-class-1' 
-                                                        imageResetClass='image-reset-class-1' 
+                                        <x-browse-image
+                                                        src="{{ url('/service/noimage/') }}"
+                                                        name='image'
+                                                        imageid='uploaded-image-1'
+                                                        inputBoxClass='input-box-class-1'
+                                                        imageResetClass='image-reset-class-1'
                                                         />
                                     </div>
                                     <br>
@@ -57,13 +57,13 @@
                                         <x-label for="description" name="{{ __('app.description') }}" />
                                         <x-textarea name="description" value=""/>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <x-label for="status" name="{{ __('app.status') }}" />
                                         <x-dropdown-status selected="" dropdownName='status'/>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>

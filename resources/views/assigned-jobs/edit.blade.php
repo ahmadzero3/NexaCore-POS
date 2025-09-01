@@ -70,7 +70,7 @@
                                             <x-label for="note" name="{{ __('app.your_note') }}" />
                                             <x-textarea name="staff_status_note" value="{{ $orderedProduct->staff_status_note }}"/>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <x-label for="staff_status" name="{{ __('app.status') }}" />
                                             <x-dropdown-general optionNaming="StaffJobStatus" selected="{{ $orderedProduct->staff_status }}" dropdownName='staff_status'/>
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>

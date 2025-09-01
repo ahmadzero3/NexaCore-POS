@@ -35,6 +35,9 @@ return new class extends Migration
             $table->integer('enable_model')->default(0);
             $table->integer('enable_color')->default(0);
             $table->integer('enable_size')->default(0);
+            $table->boolean('enable_print_tax')->default(false);
+            $table->boolean('enable_print_discount')->default(false);
+
             $table->integer('show_tax_summary')->default(1);
             $table->string('tax_type')->default('tax');
             $table->integer('show_signature_on_invoice')->default(1);

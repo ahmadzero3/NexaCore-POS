@@ -226,7 +226,7 @@
 
                                     <div class="card-body p-4 row g-3">
                                             <div class="col-md-12">
-                                                <div class="d-md-flex d-grid align-items-center gap-3">
+                                                <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                     <x-button type="button" class="primary px-4" buttonId="submit_form" text="{{ __('app.submit') }}" />
                                                     <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                                 </div>
