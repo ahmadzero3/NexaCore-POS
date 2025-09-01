@@ -30,26 +30,14 @@ class LanguageSeeder extends Seeder
                 'emoji' => 'flag-icon-us',
             ],
             [
-                'code' => 'hi',
-                'name' => 'Hindi',
-                'direction' => 'ltr',
-                'status' => 1,
-                'created_at' => $now,
-                'updated_at' => $now,
-                'emoji' => 'flag-icon-in',
-            ],
-            [
                 'code' => 'ar',
                 'name' => 'Arabic',
                 'direction' => 'rtl',
                 'status' => 1,
                 'created_at' => $now,
                 'updated_at' => $now,
-                'emoji' => 'flag-icon-ae',
+                'emoji' => 'flag-icon-lb',
             ],
-
-            // Add more records as needed
-
         ]);
     }
 }

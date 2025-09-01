@@ -15,13 +15,13 @@ class CompanySeeder extends Seeder
     {
         Company::create([
             'id'                    => 1,
-            'name'                  => 'The Quick Shop',
-            'mobile'                => '9999999999',
-            'email'                =>  'company@example.com',
-            'address'               => 'Ap: Bangalore, India',
+            'name'                  => 'Synkode Shop.',
+            'mobile'                => '71793152',
+            'email'                 => 'synkode@info.com',
+            'address'               => 'Ap: Lebanon, Saida',
             'language_code'         => null,
             'language_name'         => null,
-            'timezone'              => 'Asia/Kolkata',
+            'timezone'              => 'Asia/Beirut',
             'date_format'           => 'Y-m-d',
             'time_format'           => '24',
         ]);

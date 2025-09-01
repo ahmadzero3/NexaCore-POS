@@ -23,12 +23,12 @@
                                     @method('PUT')
                                     <input type="hidden" name='id' value="{{ $language->id }}" />
                                     <input type="hidden" id="base_url" value="{{ url('/') }}">
-                                    
+
                                     <div class="col-md-12">
                                         <x-label for="name" name="{{ __('app.name') }}" />
                                         <x-input type="text" name="name" :required="true" value="{{ $language->name }}"/>
                                     </div>
-                                    
+
                                     <div class="col-md-12">
                                         <x-label for="code" name="{{ __('app.short_code') }}" />
                                         <x-input type="text" name="code" :required="true" placeholder="Ex: en (en indicate English)" value="{{ $language->code }}"/>
@@ -50,14 +50,14 @@
                                         <x-label for="direction" name="{{ __('app.direction') }}" />
                                         <x-dropdown-general optionNaming="appDirection" selected="{{ $language->direction }}" dropdownName='direction'/>
                                     </div>
-                                    
+
                                     <div class="col-md-12">
                                         <x-label for="status" name="{{ __('app.status') }}" />
                                         <x-dropdown-status selected="{{ $language->status }}" dropdownName='status'/>
                                     </div>
-                                    
+
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>

@@ -48,6 +48,10 @@ class Sale extends Model
         'paid_amount',
         'currency_id',
         'exchange_rate',
+        'payment_type',
+        'payment_amount',
+        'balance',
+        'change_return',
     ];
 
     /**
@@ -128,17 +132,17 @@ class Sale extends Model
         return $this->morphMany(PaymentTransaction::class, 'transaction');
     }
 
-    public function saleOrder() : BelongsTo
+    public function saleOrder(): BelongsTo
     {
         return $this->belongsTo(SaleOrder::class);
     }
 
-    public function saleReturn() : HasMany
+    public function saleReturn(): HasMany
     {
         return $this->hasMany(SaleReturn::class, 'reference_no', 'sale_code');
     }
 
-    public function state() : BelongsTo
+    public function state(): BelongsTo
     {
         return $this->belongsTo(State::class, 'state_id');
     }
@@ -158,7 +162,7 @@ class Sale extends Model
         return $this->sale_code;
     }
 
-    public function quotation() : BelongsTo
+    public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class);
     }
@@ -167,5 +171,4 @@ class Sale extends Model
     {
         return $this->belongsTo(Currency::class, 'currency_id');
     }
-
 }

@@ -9,18 +9,18 @@ use App\Models\Language;
 use Illuminate\Support\Facades\Cookie;
 
 class FlagToggle extends Component
-{   
+{
     /**
      * Language array
      *
-     * @var array
+     * @var \Illuminate\Support\Collection
      */
     public $languages;
 
     /**
-     * Language array
+     * Current language code (capitalized)
      *
-     * @var array
+     * @var string
      */
     public $currentLangData;
 
@@ -34,26 +34,38 @@ class FlagToggle extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($justLinks=false)
+    public function __construct($justLinks = false)
     {
         $this->justLinks = $justLinks;
-        
+
         $this->languages = Language::whereStatus(1)
-                            ->select('id','name','code','emoji')
-                            ->get();
-        /**
-         * Encoded JSON
-         * @array
-         * */
+            ->select('id', 'name', 'code', 'emoji')
+            ->get();
+
+        // Read cookie safely and decode JSON if possible
         $cookie = Cookie::get('language_data');
+        $cookieArray = [];
+        if ($cookie && is_string($cookie)) {
+            $decoded = json_decode($cookie, true);
+            if (is_array($decoded)) {
+                $cookieArray = $decoded;
+            }
+        }
 
-        /**
-         * Decode JSON
-         * */
-        $cookieArray = json_decode($cookie, true);
-
-        // Set currentLangData based on language emoji or a default value
-        $this->currentLangData = $cookieArray['emoji']??'';
+        // Priority: cookie.code -> cookie.id -> cookie.emoji (map to code) -> app locale -> first language in DB
+        if (!empty($cookieArray['code'])) {
+            $this->currentLangData = strtoupper($cookieArray['code']);
+        } elseif (!empty($cookieArray['id'])) {
+            $found = $this->languages->firstWhere('id', $cookieArray['id']);
+            $this->currentLangData = strtoupper($found->code ?? ($this->languages->first()->code ?? app()->getLocale()));
+        } elseif (!empty($cookieArray['emoji'])) {
+            $found = $this->languages->firstWhere('emoji', $cookieArray['emoji']);
+            $this->currentLangData = strtoupper($found->code ?? $cookieArray['emoji']);
+        } else {
+            $locale = app()->getLocale();
+            $found = $this->languages->firstWhere('code', $locale);
+            $this->currentLangData = strtoupper($found->code ?? ($this->languages->first()->code ?? $locale));
+        }
     }
 
     /**

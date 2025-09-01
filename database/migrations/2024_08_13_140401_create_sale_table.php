@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('sale_date');
             $table->string('prefix_code')->nullable();
-            $table->string('count_id')->nullable();
+            // Change the column type for count_id from string to unsignedBigInteger
+            $table->unsignedBigInteger('count_id')->nullable(); // Changed from string to unsignedBigInteger
             $table->string('sale_code')->nullable();
             $table->string('reference_no')->nullable();
 
@@ -38,12 +39,17 @@ return new class extends Migration
             $table->decimal('grand_total', 20, 4)->default(0);
             $table->decimal('paid_amount', 20, 4)->default(0);
 
+            $table->string('payment_type')->nullable();
+            $table->decimal('payment_amount', 20, 4)->default(0);
+            $table->decimal('balance', 20, 4)->default(0);
+            $table->decimal('change_return', 20, 4)->default(0);
+
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
-            $table->string('invoice_status')->default('pending'); // Add this line
+            $table->string('invoice_status')->default('pending');
         });
     }
 

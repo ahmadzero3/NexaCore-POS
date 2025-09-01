@@ -25,12 +25,12 @@
                                     <input type="hidden" id="base_url" value="{{ url('/') }}">
                                     <div class="col-md-6">
                                         <x-label for="user_picture" name="{{ __('user.user_picture') }}" />
-                                        <x-browse-image 
-                                                        src="{{ url('/users/getimage/' . $user->avatar) }}" 
-                                                        name='avatar' 
-                                                        imageid='uploaded-image-1' 
-                                                        inputBoxClass='input-box-class-1' 
-                                                        imageResetClass='image-reset-class-1' 
+                                        <x-browse-image
+                                                        src="{{ url('/users/getimage/' . $user->avatar) }}"
+                                                        name='avatar'
+                                                        imageid='uploaded-image-1'
+                                                        inputBoxClass='input-box-class-1'
+                                                        imageResetClass='image-reset-class-1'
                                                         />
                                     </div>
                                     <br>
@@ -59,7 +59,7 @@
                                         <x-drop-down-roles selected="{{ $user->role_id }}" />
                                         <div class="valid-feedback"></div>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <x-label for="password" name="{{ __('user.password') }}" :optionalText="true" />
                                         <x-input type="password" name="password" :required="false" value=""/>
@@ -88,9 +88,9 @@
                                         </div>
                                     </div>
 
-                                    
+
                                     <div class="col-md-12">
-                                        <div class="d-md-flex d-grid align-items-center gap-3">
+                                        <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                             <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                             <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                         </div>

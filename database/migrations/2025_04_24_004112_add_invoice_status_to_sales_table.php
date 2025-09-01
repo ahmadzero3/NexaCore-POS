@@ -12,14 +12,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->string('invoice_status')->default('pending');
+            if (!Schema::hasColumn('sales', 'invoice_status')) {
+                $table->string('invoice_status')->default('pending');
+            }
         });
     }
 
     public function down()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('invoice_status');
+            if (Schema::hasColumn('sales', 'invoice_status')) {
+                $table->dropColumn('invoice_status');
+            }
         });
     }
 };

@@ -24,7 +24,7 @@
                                     <h5 class="mb-0">{{ __('payment.bank_statement') }}</h5>
                                 </div>
                                 <div class="card-body p-4 row g-3">
-                                    
+
                                         <div class="col-md-6 mb-3">
                                             <x-label for="from_date" name="{{ __('app.from_date') }}" />
                                             <div class="input-group">
@@ -43,7 +43,7 @@
 
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3">
+                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -104,5 +104,5 @@
     @include("plugin.export-table")
     <script src="{{ versionedAsset('custom/js/common/common.js') }}"></script>
     <script src="{{ versionedAsset('custom/js/reports/transaction/bank-statement.js') }}"></script>
-    
+
 @endsection

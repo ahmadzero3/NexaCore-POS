@@ -138,6 +138,9 @@ Route::get('/theme/switch/{theme_name}', [LanguageController::class, 'switchThem
 Route::middleware('auth')->group(function () {
         Route::post('/sale/invoice/update-status', [App\Http\Controllers\Sale\SaleController::class, 'updateInvoiceStatus'])->name('sale.invoice.updateStatus');
         Route::post('/sale/invoice/delete', [App\Http\Controllers\Sale\SaleController::class, 'delete'])->name('sale.invoice.delete');
+        Route::get('/sale/invoice/pos/customer-display', function () {
+                return view('sale.invoice.pos.customer-display');
+        })->name('sale.invoice.pos.customer-display');
         /**
          * Dashboard
          * */
