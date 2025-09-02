@@ -566,11 +566,11 @@ function addRowToInvoiceItemsTable(
     var newRow = $('<tr id="' + currentRowId + '" class="highlight">');
     newRow.append(
         "<td>" +
-            hiddenWarehouseId +
-            hiddenItemId +
-            inputItemName +
-            inputDescription +
-            "</td>"
+        hiddenWarehouseId +
+        hiddenItemId +
+        inputItemName +
+        inputDescription +
+        "</td>"
     );
 
     const isSerialVisible =
@@ -578,9 +578,9 @@ function addRowToInvoiceItemsTable(
         $("#serial_number_checkbox").prop("checked");
     newRow.append(
         `<td class="serial-td ${isSerialVisible ? "" : "d-none"}">` +
-            serialTracking +
-            hiddenSerialNumbers +
-            "</td>"
+        serialTracking +
+        hiddenSerialNumbers +
+        "</td>"
     );
     /*newRow.append(`<td class="${(!itemSettings.enable_batch_tracking)?'d-none':''}">` + inputBatchNumber + '</td>');
             newRow.append(`<td class="${(!itemSettings.enable_mfg_date)?'d-none':''}">` + mfgDate + '</td>');
@@ -589,13 +589,13 @@ function addRowToInvoiceItemsTable(
             newRow.append(`<td class="${(!itemSettings.show_mrp)?'d-none':''}">` + mrp + '</td>');*/
     newRow.append(
         `<td class="${!itemSettings.enable_color ? "d-none" : ""}">` +
-            color +
-            "</td>"
+        color +
+        "</td>"
     );
     newRow.append(
         `<td class="${!itemSettings.enable_size ? "d-none" : ""}">` +
-            size +
-            "</td>"
+        size +
+        "</td>"
     );
 
     newRow.append("<td>" + inputQuantity + "</td>");
@@ -603,19 +603,19 @@ function addRowToInvoiceItemsTable(
     newRow.append("<td>" + inputUnitPrice + hiddenTotalUnitPrice + "</td>");
     newRow.append(
         `<td class="${!itemSettings.show_discount ? "d-none" : ""}">` +
-            inputDiscount +
-            hiddenDiscountType +
-            hiddenTotalPriceAfterDiscount +
-            inputDiscountAmount +
-            "</td>"
+        inputDiscount +
+        hiddenDiscountType +
+        hiddenTotalPriceAfterDiscount +
+        inputDiscountAmount +
+        "</td>"
     );
 
     newRow.append(
         `<td class="${noTaxFlag() ? "d-none" : ""}">` +
-            taxGroup +
-            hiddenTaxType +
-            inputTaxAmount +
-            "</td>"
+        taxGroup +
+        hiddenTaxType +
+        inputTaxAmount +
+        "</td>"
     );
     newRow.append("<td>" + inputTotal + "</td>");
     newRow.append("<td>" + inputDeleteButton + "</td>");
@@ -664,8 +664,7 @@ function generateTaxSelectionBox(taxList, currentRowId, selectId = null) {
     const options = Object.values(taxList)
         .map(
             (tax) =>
-                `<option value="${tax.id}" data-tax-rate="${tax.rate}" ${
-                    selectId === tax.id ? "selected" : ""
+                `<option value="${tax.id}" data-tax-rate="${tax.rate}" ${selectId === tax.id ? "selected" : ""
                 }>${tax.name}</option>`
         )
         .join("");
@@ -680,8 +679,7 @@ function generateUnitSelectionBox(unitList, currentRowId, selectId = null) {
     const options = Object.values(unitList)
         .map(
             (unit) =>
-                `<option value="${unit.id}" ${
-                    selectId === unit.id ? "selected" : ""
+                `<option value="${unit.id}" ${selectId === unit.id ? "selected" : ""
                 }>${unit.name}</option>`
         )
         .join("");
@@ -1190,45 +1188,39 @@ itemSearchInputBoxId
             // Add header after the menu is opened
             var header = $(
                 "<li class='ui-autocomplete-category' style='padding: 5px; border-bottom: 1px solid #ddd; background-color: #f8f9fa;'>" +
-                    "<div style='display: flex; font-weight: bold;'>" +
-                    "<span style='flex: 3;'>Name</span>" +
-                    "<span style='flex: 1;'>Brand</span>" +
-                    "<span style='flex: 1; text-align: right;'>Sales Price</span>" +
-                    "<span style='flex: 1; text-align: right;'>Purchase Price</span>" +
-                    "<span style='flex: 1; text-align: right;'>Stock</span>" +
-                    "</div></li>"
+                "<div style='display: flex; font-weight: bold;'>" +
+                "<span style='flex: 3;'>Name</span>" +
+                "<span style='flex: 1;'>Brand</span>" +
+                "<span style='flex: 1; text-align: right;'>Sales Price</span>" +
+                "<span style='flex: 1; text-align: right;'>Purchase Price</span>" +
+                "<span style='flex: 1; text-align: right;'>Stock</span>" +
+                "</div></li>"
             );
             $(this).autocomplete("widget").prepend(header);
         },
     })
     .autocomplete("instance")._renderItem = function (ul, item) {
-    return $("<li>")
-        .attr("style", "padding: 5px; border-bottom: 1px solid #eee;")
-        .append(
-            `<div style="display: flex; align-items: center;">
-                        <span style="flex: 3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${
-                            item.name || "N/A"
-                        }</span>
-                        <span style="flex: 1; text-align: left;">${
-                            item.brand_name
-                        }</span>
-                        <span style="flex: 1; text-align: right;">${
-                            _parseFix(item.sale_price) || "N/A"
-                        }</span>
-                        <span style="flex: 1; text-align: right;">${
-                            _parseFix(item.purchase_price) || "N/A"
-                        }</span>
-                        <span style="flex: 1; text-align: right; color: ${
-                            _parseQuantity(item.current_stock) > 0
-                                ? "#000000"
-                                : "#dc3545"
-                        };">${
-                _parseQuantity(item.current_stock) || "N/A"
-            }</span>
+        return $("<li>")
+            .attr("style", "padding: 5px; border-bottom: 1px solid #eee;")
+            .append(
+                `<div style="display: flex; align-items: center;">
+                        <span style="flex: 3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name || "N/A"
+                }</span>
+                        <span style="flex: 1; text-align: left;">${item.brand_name
+                }</span>
+                        <span style="flex: 1; text-align: right;">${_parseFix(item.sale_price) || "N/A"
+                }</span>
+                        <span style="flex: 1; text-align: right;">${_parseFix(item.purchase_price) || "N/A"
+                }</span>
+                        <span style="flex: 1; text-align: right; color: ${_parseQuantity(item.current_stock) > 0
+                    ? "#000000"
+                    : "#dc3545"
+                };">${_parseQuantity(item.current_stock) || "N/A"
+                }</span>
                      </div>`
-        )
-        .appendTo(ul);
-};
+            )
+            .appendTo(ul);
+    };
 
 $(document).ready(function () {
     /**
@@ -1245,7 +1237,7 @@ $(document).ready(function () {
     $(".tfoot-first-td").attr(
         "colspan",
         $("#invoiceItemsTable > thead > tr:first > th").not(".d-none").length -
-            6
+        6
     );
 
     /**
@@ -1303,45 +1295,45 @@ function updateOperation(stringData) {
             serial_numbers:
                 data.tracking_type == "serial"
                     ? JSON.stringify(
-                          data.itemSerialTransactions.map(
-                              (item) => item.serial_code
-                          )
-                      )
+                        data.itemSerialTransactions.map(
+                            (item) => item.serial_code
+                        )
+                    )
                     : "",
 
             batch_no:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.batch_no !== null
+                    data.batch.item_batch_master.batch_no !== null
                     ? data.batch.item_batch_master.batch_no
                     : "",
             mfg_date:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.mfg_date !== null
+                    data.batch.item_batch_master.mfg_date !== null
                     ? data.batch.item_batch_master.mfg_date
                     : "",
             exp_date:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.exp_date !== null
+                    data.batch.item_batch_master.exp_date !== null
                     ? data.batch.item_batch_master.exp_date
                     : "",
             mrp:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.mrp !== null
+                    data.batch.item_batch_master.mrp !== null
                     ? data.batch.item_batch_master.mrp
                     : data.mrp,
             model_no:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.model_no !== null
+                    data.batch.item_batch_master.model_no !== null
                     ? data.batch.item_batch_master.model_no
                     : "",
             color:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.color !== null
+                    data.batch.item_batch_master.color !== null
                     ? data.batch.item_batch_master.color
                     : "",
             size:
                 data.tracking_type == "batch" &&
-                data.batch.item_batch_master.size !== null
+                    data.batch.item_batch_master.size !== null
                     ? data.batch.item_batch_master.size
                     : "",
         };
@@ -1705,96 +1697,122 @@ document.addEventListener("DOMContentLoaded", function () {
     calcPopup.style.display = "none";
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
-    let customerDisplayWindow = null;
+document.addEventListener('DOMContentLoaded', function () {
+    // Wait for the entire page to load completely
+    window.addEventListener('load', function () {
+        // Add a small delay to ensure everything is ready
+        setTimeout(function () {
+            let customerDisplayWindow = null;
 
-    // Open customer display window
-    function openCustomerDisplay() {
-        const url = window.customerDisplayRoute;
-        // Bigger size + positioned on right side
-        const width = 700;
-        const height = 800;
-        const left = screen.width - width - 20;
-        const top = 50;
-        customerDisplayWindow = window.open(
-            url,
-            'customer_display',
-            `width=${width},height=${height},left=${left},top=${top}`
-        );
+            // Open customer display window
+            function openCustomerDisplay() {
+                const url = window.customerDisplayRoute;
+                const width = 700;
+                const height = 800;
+                const left = screen.width - width - 20;
+                const top = 50;
 
-        // Fallback in case popup blocked
-        if (!customerDisplayWindow || customerDisplayWindow.closed || typeof customerDisplayWindow.closed ==
-            'undefined') {
-            console.warn('Customer display window was blocked. Please allow popups for this site.');
-        }
-    }
+                // Only open if not already open or if closed
+                if (!customerDisplayWindow || customerDisplayWindow.closed) {
+                    customerDisplayWindow = window.open(
+                        url,
+                        'customer_display',
+                        `width=${width},height=${height},left=${left},top=${top}`
+                    );
 
-    // Send data to customer display
-    function updateCustomerDisplay() {
-        if (!customerDisplayWindow || customerDisplayWindow.closed) return;
+                    if (!customerDisplayWindow || customerDisplayWindow.closed) {
+                        console.warn(
+                            'Customer display window was blocked. Please allow popups for this site.'
+                        );
+                        // Try again after a delay if blocked
+                        setTimeout(openCustomerDisplay, 2000);
+                    }
+                }
+            }
 
-        const items = [];
-        $('#invoiceItemsTable tbody tr').not('.default-row').each(function() {
-            const name = $(this).find('td:eq(0) label.form-label').text().trim();
-            const quantity = $(this).find('input[name^="quantity"]').val();
-            const unitPrice = $(this).find('input[name^="sale_price"]').val();
-            const total = $(this).find('input[name^="total"]').val();
+            // Send data to customer display
+            function updateCustomerDisplay() {
+                if (!customerDisplayWindow || customerDisplayWindow.closed) {
+                    // Try to reopen if closed
+                    openCustomerDisplay();
+                    // Wait a bit for the window to open before updating
+                    setTimeout(updateCustomerDisplay, 1000);
+                    return;
+                }
 
-            if (name && quantity) {
-                items.push({
-                    name,
-                    quantity,
-                    unitPrice,
-                    total
+                const items = [];
+                $('#invoiceItemsTable tbody tr').not('.default-row').each(function () {
+                    const name = $(this).find('td:eq(0) label.form-label').text()
+                        .trim();
+                    const quantity = $(this).find('input[name^="quantity"]').val();
+                    const unitPrice = $(this).find('input[name^="sale_price"]')
+                        .val();
+                    const total = $(this).find('input[name^="total"]').val();
+
+                    if (name && quantity) {
+                        items.push({
+                            name,
+                            quantity,
+                            unitPrice,
+                            total
+                        });
+                    }
+                });
+
+                const totals = {
+                    subtotal: $('#totalPrice').text(),
+                    tax: $('#totalTax').text(),
+                    discount: $('#totalDiscount').text(),
+                    grandTotal: $('input[name="grand_total"]').val()
+                };
+
+                try {
+                    customerDisplayWindow.postMessage({
+                        type: 'UPDATE_CUSTOMER_DISPLAY',
+                        items,
+                        totals
+                    }, '*');
+                } catch (e) {
+                    console.error('Error sending message to customer display:', e);
+                    // If there's an error, try to reopen the window
+                    openCustomerDisplay();
+                }
+            }
+
+            // Open customer display after main page is fully loaded
+            openCustomerDisplay();
+
+            // Update customer display when items change
+            const observer = new MutationObserver(updateCustomerDisplay);
+            const targetNode = document.getElementById('invoiceItemsTable');
+            if (targetNode) {
+                observer.observe(targetNode, {
+                    childList: true,
+                    subtree: true
                 });
             }
-        });
 
-        const totals = {
-            subtotal: $('#totalPrice').text(),
-            tax: $('#totalTax').text(),
-            discount: $('#totalDiscount').text(),
-            grandTotal: $('input[name="grand_total"]').val()
-        };
+            $(document).on('change',
+                '#invoiceItemsTable input, input[name^="payment_amount"]',
+                updateCustomerDisplay);
 
-        customerDisplayWindow.postMessage({
-            type: 'UPDATE_CUSTOMER_DISPLAY',
-            items,
-            totals
-        }, '*');
-    }
+            // Listen for messages from display
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'CUSTOMER_DISPLAY_READY') {
+                    setTimeout(updateCustomerDisplay, 500);
+                }
+            });
 
-    // Open customer display on load
-    openCustomerDisplay();
+            // Initial update after a delay to ensure the window is ready
+            setTimeout(updateCustomerDisplay, 2000);
 
-    // Always reopen if closed
-    setInterval(function() {
-        if (!customerDisplayWindow || customerDisplayWindow.closed) {
-            openCustomerDisplay();
-            setTimeout(updateCustomerDisplay, 1000);
-        }
-    }, 2000);
-
-    // Update customer display when items change
-    const observer = new MutationObserver(updateCustomerDisplay);
-    const targetNode = document.getElementById('invoiceItemsTable');
-    if (targetNode) {
-        observer.observe(targetNode, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    $(document).on('change', '#invoiceItemsTable input, input[name^="payment_amount"]',
-        updateCustomerDisplay);
-
-    // Listen for messages from display
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'CUSTOMER_DISPLAY_READY') {
-            setTimeout(updateCustomerDisplay, 500);
-        }
+            // Check if window is still open periodically
+            setInterval(function () {
+                if (customerDisplayWindow && customerDisplayWindow.closed) {
+                    openCustomerDisplay();
+                    setTimeout(updateCustomerDisplay, 1000);
+                }
+            }, 3000);
+        }, 1000); // 1 second delay after page load
     });
-
-    // Initial update
-    setTimeout(updateCustomerDisplay, 1000);
 });
