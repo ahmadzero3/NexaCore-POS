@@ -446,25 +446,25 @@ class ItemTransactionService
         ItemBatchQuantity::where('item_batch_master_id', $itemBatchMasterId)->delete();
 
         $itemBatchTransactions = ItemBatchTransaction::selectRaw('
-                     (
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::PURCHASE->value . '" THEN quantity ELSE 0 END), 0)
-                        -
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::PURCHASE_RETURN->value . '" THEN quantity ELSE 0 END), 0)
-                        -
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::SALE->value . '" THEN quantity ELSE 0 END), 0)
-                        +
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::SALE_RETURN->value . '" THEN quantity ELSE 0 END), 0)
-                        +
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::ITEM_OPENING->value . '" THEN quantity ELSE 0 END), 0)
-                        -
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::STOCK_TRANSFER->value . '" THEN quantity ELSE 0 END), 0)
-                        +
-                        COALESCE(SUM(CASE WHEN unique_code = "' . ItemTransactionUniqueCode::STOCK_RECEIVE->value . '" THEN quantity ELSE 0 END), 0)
-                    ) as item_batch_warehouse_stock,
-                    item_id,
-                    warehouse_id,
-                    item_batch_master_id
-                ')
+    (
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::PURCHASE->value . '\' THEN quantity ELSE 0 END), 0)
+        -
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::PURCHASE_RETURN->value . '\' THEN quantity ELSE 0 END), 0)
+        -
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::SALE->value . '\' THEN quantity ELSE 0 END), 0)
+        +
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::SALE_RETURN->value . '\' THEN quantity ELSE 0 END), 0)
+        +
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::ITEM_OPENING->value . '\' THEN quantity ELSE 0 END), 0)
+        -
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::STOCK_TRANSFER->value . '\' THEN quantity ELSE 0 END), 0)
+        +
+        COALESCE(SUM(CASE WHEN unique_code = \'' . ItemTransactionUniqueCode::STOCK_RECEIVE->value . '\' THEN quantity ELSE 0 END), 0)
+    ) as item_batch_warehouse_stock,
+    item_id,
+    warehouse_id,
+    item_batch_master_id
+')
             ->where('item_batch_master_id', $itemBatchMasterId)
             ->whereNotIn('unique_code', [ItemTransactionUniqueCode::PURCHASE_ORDER->value, ItemTransactionUniqueCode::SALE_ORDER->value])
             ->groupBy('item_id', 'warehouse_id', 'item_batch_master_id')
