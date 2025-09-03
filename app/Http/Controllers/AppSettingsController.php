@@ -241,58 +241,17 @@ class AppSettingsController extends Controller
     }
     public function databaseBackup()
     {
+        $backupScript = base_path('db-backup.sh');
         $filename = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
+        $backupPath = storage_path('app/backups/' . $filename);
 
-        // PostgreSQL connection details from .env
-        $dbHost = env('DB_HOST');
-        $dbPort = env('DB_PORT');
-        $dbName = env('DB_DATABASE');
-        $dbUser = env('DB_USERNAME');
-        $dbPassword = env('DB_PASSWORD');
+        $command = "sh $backupScript";
+        exec($command, $output, $returnCode);
 
-        // Set the environment variable for pg_dump password
-        putenv("PGPASSWORD={$dbPassword}");
-
-        // Full path to pg_dump
-        $pgDumpPath = '"C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe"';
-
-        // Build the pg_dump command
-        $command = "{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F p {$dbName}";
-
-        // Execute the command and capture the output
-        $process = proc_open(
-            $command,
-            [
-                1 => ['pipe', 'w'], // stdout
-                2 => ['pipe', 'w'], // stderr
-            ],
-            $pipes
-        );
-
-        if (is_resource($process)) {
-            $output = stream_get_contents($pipes[1]);
-            $error = stream_get_contents($pipes[2]);
-
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-
-            $returnCode = proc_close($process);
-
-            if ($returnCode === 0) {
-                return response($output)
-                    ->header('Content-Type', 'application/sql')
-                    ->header('Content-Disposition', "attachment; filename={$filename}");
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Backup failed: {$error}",
-                ], 500);
-            }
+        if ($returnCode === 0 && file_exists($backupPath)) {
+            return response()->download($backupPath)->deleteFileAfterSend(true);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Backup failed'], 500);
         }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'Could not initiate backup process.',
-        ], 500);
     }
 }
