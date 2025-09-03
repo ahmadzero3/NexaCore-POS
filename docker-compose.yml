@@ -1,11 +1,12 @@
 version: "3.8"
 
 # Load environment variables from .env.docker file
-# This centralizes all port configuration in one place
+# Centralizes all port configuration in one place
 
 services:
     # PHP-FPM service
     app:
+        restart: always
         build:
             context: .
             dockerfile: Dockerfile.app
@@ -22,10 +23,12 @@ services:
             - DB_USERNAME=postgres
             - DB_PASSWORD=postgres
         depends_on:
-            - db
+            db:
+                condition: service_healthy   # ✅ wait until db is healthy
 
     # Nginx service
     web:
+        restart: always
         build:
             context: .
             dockerfile: Dockerfile.nginx
@@ -34,10 +37,12 @@ services:
         volumes:
             - .:/var/www/html:delegated
         depends_on:
-            - app
+            app:
+                condition: service_started   # ✅ wait until app is running
 
     # PostgreSQL database service
     db:
+        restart: always
         image: postgres:13-alpine
         ports:
             - "${EXTERNAL_DB_PORT:-5433}:${INTERNAL_DB_PORT:-5432}"
@@ -48,11 +53,26 @@ services:
         volumes:
             - db_data:/var/lib/postgresql/data
         healthcheck:
-            test:
-                ["CMD-SHELL", "pg_isready -U postgres -d laravel"]
+            test: ["CMD-SHELL", "pg_isready -U postgres -d laravel"]
             interval: 5s
             timeout: 5s
             retries: 5
 
+    # pgAdmin service (web UI for PostgreSQL)
+    pgadmin:
+        restart: always
+        image: dpage/pgadmin4:latest
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: admin
+        ports:
+            - "5050:80"
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - pgadmin_data:/var/lib/pgadmin
+
 volumes:
     db_data:
+    pgadmin_data:
