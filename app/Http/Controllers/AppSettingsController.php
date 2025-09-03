@@ -241,17 +241,22 @@ class AppSettingsController extends Controller
     }
     public function databaseBackup()
     {
-        $backupScript = base_path('db-backup.sh');
         $filename = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
         $backupPath = storage_path('app/backups/' . $filename);
 
-        $command = "sh $backupScript";
+        // ✅ Run pg_dump directly inside the app container
+        $command = "PGPASSWORD=postgres pg_dump -h db -U postgres laravel > \"$backupPath\" 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode === 0 && file_exists($backupPath)) {
+            // ✅ Download the backup file and delete after sending
             return response()->download($backupPath)->deleteFileAfterSend(true);
         } else {
-            return response()->json(['status' => false, 'message' => 'Backup failed'], 500);
+            // ❌ Show error details if backup fails
+            return response()->json([
+                'status'  => false,
+                'message' => 'Backup failed: ' . implode("\n", $output),
+            ], 500);
         }
     }
 }
