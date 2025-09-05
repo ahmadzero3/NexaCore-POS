@@ -54,6 +54,7 @@ class AppSettingsController extends Controller
         $settings = AppSettings::findOrNew($this->appSettingsRecordId);
         $settings->application_name = $validatedData['application_name'];
         $settings->footer_text = $validatedData['footer_text'];
+        $settings->phone_number = $validatedData['phone_number']; 
         $settings->language_id = $validatedData['language_id'];
         $settings->save();
 

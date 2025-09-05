@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('application_name');
             $table->string('footer_text');
+            $table->string('phone_number')->nullable();
             $table->string('colored_logo')->nullable();
             $table->string('light_logo')->nullable();
             // $table->string('language_code')->nullable();

@@ -6,8 +6,10 @@ body {
 }
 
 .customer-display-container {
-    max-width: 700px;
-    height: 500px;
+    width: 100%;
+    max-width: 1600px;
+    min-width: 300px;
+    height: auto;
     margin: 0 auto;
     background-color: white;
     border-radius: 8px;
@@ -40,6 +42,7 @@ body {
 .items-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: clamp(0.9rem, 1vw, 1.1rem);
 }
 
 .items-table th,
@@ -61,6 +64,7 @@ body {
     padding: 12px;
     border-radius: 5px;
     flex-shrink: 0;
+    font-size: clamp(1rem, 1.2vw, 1.3rem);
 }
 
 .totals div {
@@ -70,7 +74,7 @@ body {
 }
 
 .grand-total {
-    font-size: 1.2em;
+    font-size: clamp(1.2rem, 1.5vw, 1.8rem);
     font-weight: bold;
     border-top: 2px solid #ddd;
     padding-top: 8px;
@@ -82,4 +86,57 @@ body {
     color: #6c757d;
     padding: 20px;
     font-style: italic;
+}
+
+.warehouse-name {
+    color: red;
+    font-weight: bold;
+}
+
+.news-ticker {
+    background-color: #222;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+    font-size: clamp(1.1rem, 1.4vw, 1.6rem);
+    position: relative;
+}
+
+.ticker-content {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ticker 20s linear infinite;
+}
+
+.ticker-content span {
+    display: inline-block;
+    padding-right: 100px;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-33.333%);
+    }
+}
+
+/* Responsive scaling */
+@media (min-width: 768px) {
+    .customer-display-container {
+        padding: 30px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .customer-display-container {
+        padding: 40px;
+    }
 }

@@ -1,35 +1,34 @@
 function updateCustomerDisplay(items, totals) {
-    const itemsList = document.getElementById('items-list');
-    itemsList.innerHTML = '';
+    const tbody = document.getElementById('items-tbody');
+    tbody.innerHTML = '';
 
     if (items.length === 0) {
-        itemsList.innerHTML = '<tr><td colspan="4" class="no-items">No items added yet</td></tr>';
-        return;
+        tbody.innerHTML = '<tr><td colspan="4" class="no-items">No items added yet</td></tr>';
+    } else {
+        items.forEach(item => {
+            const row = tbody.insertRow();
+            row.insertCell(0).textContent = item.name;
+            row.insertCell(1).textContent = item.quantity;
+            row.insertCell(2).textContent = item.unitPrice;
+            row.insertCell(3).textContent = item.total;
+        });
     }
 
-    items.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>${item.unitPrice}</td>
-            <td>${item.total}</td>
-        `;
-        itemsList.appendChild(row);
-    });
-
-    document.getElementById('subtotal').textContent = totals.subtotal || '0.00';
-    document.getElementById('grand-total').textContent = totals.grandTotal || '0.00';
+    document.getElementById('display-total').textContent = totals.grandTotal || '0.00';
 }
 
-window.addEventListener('message', function(event) {
+window.addEventListener('message', function (event) {
     if (event.data.type === 'UPDATE_CUSTOMER_DISPLAY') {
         updateCustomerDisplay(event.data.items, event.data.totals);
+    } else if (
+        event.data.type === 'WAREHOUSE_CHANGED' ||
+        event.data.type === 'INITIAL_WAREHOUSE_INFO'
+    ) {
+        document.getElementById('warehouse-name').textContent = event.data.warehouseName || 'N/A';
     }
 });
 
 if (window.opener) {
-    window.opener.postMessage({
-        type: 'CUSTOMER_DISPLAY_READY'
-    }, '*');
+    window.opener.postMessage({ type: 'CUSTOMER_DISPLAY_READY' }, '*');
+    window.opener.postMessage({ type: 'REQUEST_INITIAL_WAREHOUSE' }, '*');
 }

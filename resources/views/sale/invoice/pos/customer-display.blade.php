@@ -2,7 +2,6 @@
 
 @section('title', 'Customer Display')
 
-
 @section('css')
     <link rel="stylesheet" href="{{ asset('custom/css/customer-display.css') }}">
 @endsection
@@ -11,7 +10,33 @@
     <div class="customer-display-container">
         <div class="header">
             <h1>{{ app('site')['name'] }}</h1>
-            <h4>Your Order</h4>
+            <h4>
+                Your Order is From (Branch: <span id="warehouse-name" class="warehouse-name">N/A</span>)
+                of {{ app('company')['name'] ?? '' }}
+            </h4>
+        </div>
+
+        <div class="news-ticker">
+            <div class="ticker-content">
+                <span>
+                    {{ app('company')['name'] ?? '' }} |
+                    {{ app('company')['email'] ?? '' }} |
+                    {{ app('company')['mobile'] ?? '' }} |
+                    {{ app('company')['address'] ?? '' }}
+                </span>
+                <span>
+                    {{ app('company')['name'] ?? '' }} |
+                    {{ app('company')['email'] ?? '' }} |
+                    {{ app('company')['mobile'] ?? '' }} |
+                    {{ app('company')['address'] ?? '' }}
+                </span>
+                <span>
+                    {{ app('company')['name'] ?? '' }} |
+                    {{ app('company')['email'] ?? '' }} |
+                    {{ app('company')['mobile'] ?? '' }} |
+                    {{ app('company')['address'] ?? '' }}
+                </span>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -24,7 +49,7 @@
                         <th>Total</th>
                     </tr>
                 </thead>
-                <tbody id="items-list">
+                <tbody id="items-tbody">
                     <tr class="empty-row">
                         <td colspan="4" class="no-items">No items added yet</td>
                     </tr>
@@ -33,17 +58,14 @@
         </div>
 
         <div class="totals">
-            <div>
-                <span>Subtotal:</span>
-                <span id="subtotal">0.00</span>
-            </div>
-
-            <div class="grand-total">
-                <span>Grand Total:</span>
-                <span id="grand-total">0.00</span>
+            <div class="total-row final-total">
+                <span>Total:</span>
+                <span id="display-total">0.00</span>
             </div>
         </div>
     </div>
+
+    @include('layouts.footer')
 @endsection
 
 @section('js')

@@ -20,6 +20,7 @@ class AppSettings extends Model
     protected $fillable = [
         'application_name',
         'footer_text',
+        'phone_number',
         'colored_logo',
         'light_logo',
         'active_sms_api',
