@@ -241,58 +241,62 @@ class AppSettingsController extends Controller
     }
     public function databaseBackup()
     {
-        $filename = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        $baseName = "databasebackup_{$timestamp}";
+        $sqlFilename = "{$baseName}.sql";
+        $backupFilename = "{$baseName}.backup";
+        $innerZipFilename = "{$baseName}.zip";
+        $outerZipFilename = "{$baseName}.zip";
 
-        // PostgreSQL connection details from .env
         $dbHost = env('DB_HOST');
         $dbPort = env('DB_PORT');
         $dbName = env('DB_DATABASE');
         $dbUser = env('DB_USERNAME');
         $dbPassword = env('DB_PASSWORD');
 
-        // Set the environment variable for pg_dump password
         putenv("PGPASSWORD={$dbPassword}");
-
-        // Full path to pg_dump
         $pgDumpPath = '"C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe"';
 
-        // Build the pg_dump command
-        $command = "{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F p {$dbName}";
+        // Use temporary folder
+        $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $baseName;
+        mkdir($tempDir, 0777, true);
 
-        // Execute the command and capture the output
-        $process = proc_open(
-            $command,
-            [
-                1 => ['pipe', 'w'], // stdout
-                2 => ['pipe', 'w'], // stderr
-            ],
-            $pipes
-        );
+        $sqlFilePath = $tempDir . DIRECTORY_SEPARATOR . $sqlFilename;
+        $backupFilePath = $tempDir . DIRECTORY_SEPARATOR . $backupFilename;
+        $innerZipPath = $tempDir . DIRECTORY_SEPARATOR . $innerZipFilename;
+        $outerZipPath = $tempDir . DIRECTORY_SEPARATOR . $outerZipFilename;
 
-        if (is_resource($process)) {
-            $output = stream_get_contents($pipes[1]);
-            $error = stream_get_contents($pipes[2]);
+        // Generate SQL and BACKUP files in temp
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F p {$dbName} > \"{$sqlFilePath}\"", $out1, $sqlReturnCode);
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F c {$dbName} > \"{$backupFilePath}\"", $out2, $backupReturnCode);
 
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-
-            $returnCode = proc_close($process);
-
-            if ($returnCode === 0) {
-                return response($output)
-                    ->header('Content-Type', 'application/sql')
-                    ->header('Content-Disposition', "attachment; filename={$filename}");
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Backup failed: {$error}",
-                ], 500);
-            }
+        if ($sqlReturnCode !== 0 || $backupReturnCode !== 0) {
+            return response()->json(['status' => false, 'message' => 'SQL dump or backup failed.'], 500);
         }
 
-        return response()->json([
-            'status' => false,
-            'message' => 'Could not initiate backup process.',
-        ], 500);
+        // Create inner zip (SQL + BACKUP)
+        $zipInner = new \ZipArchive;
+        if ($zipInner->open($innerZipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            $zipInner->addFile($sqlFilePath, $sqlFilename);
+            $zipInner->addFile($backupFilePath, $backupFilename);
+            $zipInner->close();
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed to create inner zip'], 500);
+        }
+
+        // Create outer zip with folder inside
+        $zipOuter = new \ZipArchive;
+        if ($zipOuter->open($outerZipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            $folder = "{$baseName}/";
+            $zipOuter->addFile($sqlFilePath, $folder . $sqlFilename);
+            $zipOuter->addFile($backupFilePath, $folder . $backupFilename);
+            $zipOuter->addFile($innerZipPath, $folder . $innerZipFilename);
+            $zipOuter->close();
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed to create outer zip'], 500);
+        }
+
+        // Force download & cleanup temp files
+        return response()->download($outerZipPath, $outerZipFilename)->deleteFileAfterSend(true)->deleteFileAfterSend(true);
     }
 }

@@ -105,7 +105,6 @@
                                                 <table class="table mb-0 table-striped table-bordered" id="invoiceItemsTable">
                                                     <thead>
                                                         <tr class="text-uppercase">
-                                                            <th scope="col">{{ __('app.action') }}</th>
                                                             <th scope="col">{{ __('item.item') }}</th>
                                                             <th scope="col" class="{{ !app('company')['enable_serial_tracking'] ? 'd-none':'' }}">{{ __('item.serial') }}</th>
                                                             <th scope="col" class="{{ !app('company')['enable_batch_tracking'] ? 'd-none':'' }}">{{ __('item.batch_no') }}</th>
@@ -121,6 +120,7 @@
                                                             <th scope="col" class="{{ !app('company')['show_discount'] ? 'd-none':'' }}">{{ __('app.discount') }}</th>
                                                             <th scope="col" class="{{ (app('company')['tax_type'] == 'no-tax') ? 'd-none':'' }}">{{ __('tax.tax') }}</th>
                                                             <th scope="col">{{ __('app.total') }}</th>
+                                                            <th scope="col">{{ __('app.action') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

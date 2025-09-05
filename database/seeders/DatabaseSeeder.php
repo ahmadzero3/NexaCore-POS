@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         DB::beginTransaction();
 
-        try{
+        try {
             $hasDataInAppSettings = DB::table('app_settings')->count();
 
-            if(!$hasDataInAppSettings){
+            if (!$hasDataInAppSettings) {
                 // Create instances of the seeder classes & call its method run()
                 $adminSeeder = new AdminSeeder();
                 $adminSeeder->run();
@@ -70,6 +70,9 @@ class DatabaseSeeder extends Seeder
 
                 $statesSeeder = new StatesSeeder();
                 $statesSeeder->run();
+
+                $customizationsSeeder = new CustomizationsSeeder();
+                $customizationsSeeder->run();
             }
 
             //Call UpdateSeeder
@@ -80,15 +83,12 @@ class DatabaseSeeder extends Seeder
 
             echo "Seeding Completed!!";
 
-             // Run the permission cache clear command
+            // Run the permission cache clear command
             Artisan::call('config:clear');
-
         } catch (\Exception $e) {
-                echo "Error: ".$e->getMessage();
-                throw $e;
-                DB::rollback();
+            echo "Error: " . $e->getMessage();
+            throw $e;
+            DB::rollback();
         }
-
-
     }
 }
