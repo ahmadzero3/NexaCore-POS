@@ -55,7 +55,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install PHP dependencies
-RUN composer install --dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install --no-interaction --optimize-autoloader --prefer-dist || true
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build
