@@ -1719,9 +1719,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         if (customerDisplayWindow) {
                             customerDisplayWindow.focus();
+                            // ✅ FIX: push warehouse + items right after open
+                            setTimeout(() => {
+                                sendWarehouseInfo();
+                                updateCustomerDisplay();
+                            }, 800);
                         }
                     } catch (e) {
-                        // silently ignore errors
+                        console.warn("Error opening customer display:", e);
                     }
                 } else {
                     customerDisplayWindow = window.open(
@@ -1729,8 +1734,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         "customer_display",
                         "width=800,height=600"
                     );
+
+                    if (customerDisplayWindow) {
+                        // ✅ FIX: same here for fallback
+                        setTimeout(() => {
+                            sendWarehouseInfo();
+                            updateCustomerDisplay();
+                        }, 800);
+                    }
                 }
             }
+
 
 
             function sendWarehouseInfo() {
@@ -1771,16 +1785,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
 
                 try {
+                    // ✅ grab announcement text from ticker
+                    const ticker = $(".ticker-content").text() || '';
+
+                    // ✅ send everything in one message
                     customerDisplayWindow.postMessage({
                         type: 'UPDATE_CUSTOMER_DISPLAY',
                         items,
-                        totals
+                        totals,
+                        ticker: ticker
                     }, '*');
                 } catch (e) {
                     console.error('Error sending message to customer display:', e);
                     openCustomerDisplay();
                 }
             }
+
 
             openCustomerDisplay();
 

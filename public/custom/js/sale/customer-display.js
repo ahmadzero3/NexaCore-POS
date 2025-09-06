@@ -1,8 +1,10 @@
-function updateCustomerDisplay(items, totals) {
+function updateCustomerDisplay(items, totals, ticker = null) {
     const tbody = document.getElementById('items-tbody');
+    if (!tbody) return;
+
     tbody.innerHTML = '';
 
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="no-items">No items added yet</td></tr>';
     } else {
         items.forEach(item => {
@@ -14,12 +16,16 @@ function updateCustomerDisplay(items, totals) {
         });
     }
 
-    document.getElementById('display-total').textContent = totals.grandTotal || '0.00';
+    document.getElementById('display-total').textContent = (totals?.grandTotal) || '0.00';
+
+    if (ticker && document.querySelector('.ticker-content')) {
+        document.querySelector('.ticker-content').textContent = ticker;
+    }
 }
 
 window.addEventListener('message', function (event) {
     if (event.data.type === 'UPDATE_CUSTOMER_DISPLAY') {
-        updateCustomerDisplay(event.data.items, event.data.totals);
+        updateCustomerDisplay(event.data.items, event.data.totals, event.data.ticker);
     } else if (
         event.data.type === 'WAREHOUSE_CHANGED' ||
         event.data.type === 'INITIAL_WAREHOUSE_INFO'
