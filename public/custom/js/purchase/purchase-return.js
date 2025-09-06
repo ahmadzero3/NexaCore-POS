@@ -345,7 +345,6 @@
 
 
         var newRow = $('<tr id="'+ currentRowId +'" class="highlight">');
-            newRow.append('<td>' + inputDeleteButton + '</td>');
             newRow.append('<td>' + hiddenWarehouseId + hiddenItemId + inputItemName + inputDescription + '</td>');
 
             newRow.append(`<td class="${(!itemSettings.enable_serial_tracking)?'d-none':''}">` + serialTracking + hiddenSerialNumbers + '</td>');
@@ -364,6 +363,7 @@
 
             newRow.append(`<td class="${noTaxFlag()?'d-none':''}">` + taxGroup + hiddenTaxType + inputTaxAmount + '</td>');
             newRow.append('<td>' + inputTotal + '</td>');
+            newRow.append('<td>' + inputDeleteButton + '</td>');
 
             // Add action buttons
             var actionButtonCell = $('<td>');

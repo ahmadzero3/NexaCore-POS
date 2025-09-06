@@ -51,36 +51,25 @@ class AppServiceProvider extends ServiceProvider
             });
 
             $this->app->singleton('site', function () {
-                try {
-                    $appSettings = CacheService::get('appSetting');
-                    return [
-                        'name'              => $appSettings?->application_name,
-                        'colored_logo'      => $appSettings?->colored_logo,
-                    ];
-                } catch (\Exception $e) {
-                    return [
-                        'name'              => 'NexaCore POS',
-                        'colored_logo'      => null,
-                    ];
-                }
+                $appSettings = CacheService::get('appSetting');
+                return [
+                    'name'              => $appSettings?->application_name,
+                    'colored_logo'      => $appSettings?->colored_logo,
+                ];
             });
 
             // ✅ Check if the smtp_settings table exists before registering
-            try {
-                if (Schema::hasTable('smtp_settings')) {
-                    $this->app->singleton('smtp_settings', function () {
-                        $smtpSettings = CacheService::get('smtpSettings');
-                        return [
-                            'host'       => $smtpSettings?->host,
-                            'port'       => $smtpSettings?->port,
-                            'username'   => $smtpSettings?->username,
-                            'password'   => $smtpSettings?->password,
-                            'encryption' => $smtpSettings?->encryption,
-                        ];
-                    });
-                }
-            } catch (\Exception $e) {
-                // Database not available during build, skip SMTP settings registration
+            if (Schema::hasTable('smtp_settings')) {
+                $this->app->singleton('smtp_settings', function () {
+                    $smtpSettings = CacheService::get('smtpSettings');
+                    return [
+                        'host'       => $smtpSettings?->host,
+                        'port'       => $smtpSettings?->port,
+                        'username'   => $smtpSettings?->username,
+                        'password'   => $smtpSettings?->password,
+                        'encryption' => $smtpSettings?->encryption,
+                    ];
+                });
             }
         }
     }
@@ -92,46 +81,38 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (env('INSTALLATION_STATUS')) {
-            try {
-                // ✅ Only try resolving smtp_settings if the table exists and the binding is registered
-                if (Schema::hasTable('smtp_settings') && $this->app->bound('smtp_settings')) {
-                    $smtpSettings = $this->app->make('smtp_settings');
+            // ✅ Only try resolving smtp_settings if the table exists and the binding is registered
+            if (Schema::hasTable('smtp_settings') && $this->app->bound('smtp_settings')) {
+                $smtpSettings = $this->app->make('smtp_settings');
 
-                    // Extract SMTP settings from the model
-                    $driver = "smtp";
+                // Extract SMTP settings from the model
+                $driver = "smtp";
 
-                    // Update mail configuration with retrieved settings
-                    config([
-                        'mail.driver'     => $driver,
-                        'mail.host'       => $smtpSettings['host'],
-                        'mail.port'       => $smtpSettings['port'],
-                        'mail.username'   => $smtpSettings['username'],
-                        'mail.password'   => $smtpSettings['password'],
-                        'mail.encryption' => $smtpSettings['encryption'],
-                    ]);
-                }
-            } catch (\Exception $e) {
-                // Ignore database errors during package discovery or when DB is not available
+                // Update mail configuration with retrieved settings
+                config([
+                    'mail.driver'     => $driver,
+                    'mail.host'       => $smtpSettings['host'],
+                    'mail.port'       => $smtpSettings['port'],
+                    'mail.username'   => $smtpSettings['username'],
+                    'mail.password'   => $smtpSettings['password'],
+                    'mail.encryption' => $smtpSettings['encryption'],
+                ]);
             }
         }
 
-        try {
-            if (Schema::hasTable('customizations')) {
-                View::composer('*', function ($view) {
-                    $custom = DB::table('customizations')
-                        ->whereIn('key', [
-                            'card_header_color',
-                            'card_border_color',
-                            'heading_color',
-                        ])
-                        ->pluck('value', 'key')
-                        ->all();
+        if (Schema::hasTable('customizations')) {
+            View::composer('*', function ($view) {
+                $custom = DB::table('customizations')
+                    ->whereIn('key', [
+                        'card_header_color',
+                        'card_border_color',
+                        'heading_color',
+                    ])
+                    ->pluck('value', 'key')
+                    ->all();
 
-                    $view->with('custom', $custom);
-                });
-            }
-        } catch (\Exception $e) {
-            // Ignore database errors during package discovery or when DB is not available
+                $view->with('custom', $custom);
+            });
         }
 
         Relation::morphMap([

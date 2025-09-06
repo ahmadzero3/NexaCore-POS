@@ -260,10 +260,10 @@
                                                         <th scope="col" class="d-none serial-column">
                                                             {{ __('item.serial') }}</th>
                                                         <!---<th scope="col" class="{{ !app('company')['enable_batch_tracking'] ? 'd-none' : '' }}">{{ __('item.batch_no') }}</th>
-                                                                                            <th scope="col" class="{{ !app('company')['enable_mfg_date'] ? 'd-none' : '' }}">{{ __('item.mfg_date') }}</th>
-                                                                                            <th scope="col" class="{{ !app('company')['enable_exp_date'] ? 'd-none' : '' }}">{{ __('item.exp_date') }}</th>
-                                                                                            <th scope="col" class="{{ !app('company')['enable_model'] ? 'd-none' : '' }}">{{ __('item.model_no') }}</th>
-                                                                                            <th scope="col" class="{{ !app('company')['show_mrp'] ? 'd-none' : '' }}">{{ __('item.mrp') }}</th>--->
+                                                                                                <th scope="col" class="{{ !app('company')['enable_mfg_date'] ? 'd-none' : '' }}">{{ __('item.mfg_date') }}</th>
+                                                                                                <th scope="col" class="{{ !app('company')['enable_exp_date'] ? 'd-none' : '' }}">{{ __('item.exp_date') }}</th>
+                                                                                                <th scope="col" class="{{ !app('company')['enable_model'] ? 'd-none' : '' }}">{{ __('item.model_no') }}</th>
+                                                                                                <th scope="col" class="{{ !app('company')['show_mrp'] ? 'd-none' : '' }}">{{ __('item.mrp') }}</th>--->
                                                         <th scope="col"
                                                             class="{{ !app('company')['enable_color'] ? 'd-none' : '' }}">
                                                             {{ __('item.color') }}</th>

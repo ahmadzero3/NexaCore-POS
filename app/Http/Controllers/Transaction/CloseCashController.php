@@ -98,23 +98,35 @@ class CloseCashController extends Controller
 
     public function insertCloseCashData(Request $request)
     {
-        $data = $request->validate([
-            'opening_balance' => 'required|numeric',
-            'today_income' => 'required|numeric',
-            'total_income' => 'required|numeric',
-            'today_expenses' => 'required|numeric',
-            'balance' => 'required|numeric',
-            'created_by' => 'required|exists:users,id',
-        ]);
+        try {
+            // Validate incoming request data
+            $data = $request->validate([
+                'opening_balance' => 'required|numeric',
+                'today_income' => 'required|numeric',
+                'total_income' => 'required|numeric',
+                'today_expenses' => 'required|numeric',
+                'balance' => 'required|numeric',
+                'created_by' => 'required|exists:users,id', // Expecting created_by from request, validated
+            ]);
 
-        // Add current timestamps
-        $data['user_id'] = auth()->id();
-        $data['created_at'] = now();
-        $data['updated_at'] = now();
+            // Add current timestamps
+            // Use 'created_by' instead of 'user_id' to match the database column
+            $data['created_by'] = auth()->id(); // Override or ensure created_by is the logged-in user
+            $data['created_at'] = now();
+            $data['updated_at'] = now();
 
-        DB::table('close_cash')->insert($data);
+            // Insert data into the 'close_cash' table
+            DB::table('close_cash')->insert($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Data inserted successfully']);
+            // Return success response
+            return response()->json(['status' => 'success', 'message' => 'Data inserted successfully']);
+        } catch (\Exception $e) {
+            // Log the error for debugging (optional but recommended)
+            // \Log::error('Close Cash Insert Error: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json(['status' => 'error', 'message' => 'An error occurred while saving the data.'], 500);
+        }
     }
 
     public function listCloseCash()

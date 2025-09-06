@@ -54,6 +54,7 @@ class AppSettingsController extends Controller
         $settings = AppSettings::findOrNew($this->appSettingsRecordId);
         $settings->application_name = $validatedData['application_name'];
         $settings->footer_text = $validatedData['footer_text'];
+        $settings->phone_number = $validatedData['phone_number']; 
         $settings->language_id = $validatedData['language_id'];
         $settings->save();
 
@@ -241,22 +242,62 @@ class AppSettingsController extends Controller
     }
     public function databaseBackup()
     {
-        $filename = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
-        $backupPath = storage_path('app/backups/' . $filename);
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        $baseName = "databasebackup_{$timestamp}";
+        $sqlFilename = "{$baseName}.sql";
+        $backupFilename = "{$baseName}.backup";
+        $innerZipFilename = "{$baseName}.zip";
+        $outerZipFilename = "{$baseName}.zip";
 
-        // ✅ Run pg_dump directly inside the app container
-        $command = "PGPASSWORD=postgres pg_dump -h db -U postgres laravel > \"$backupPath\" 2>&1";
-        exec($command, $output, $returnCode);
+        $dbHost = env('DB_HOST');
+        $dbPort = env('DB_PORT');
+        $dbName = env('DB_DATABASE');
+        $dbUser = env('DB_USERNAME');
+        $dbPassword = env('DB_PASSWORD');
 
-        if ($returnCode === 0 && file_exists($backupPath)) {
-            // ✅ Download the backup file and delete after sending
-            return response()->download($backupPath)->deleteFileAfterSend(true);
-        } else {
-            // ❌ Show error details if backup fails
-            return response()->json([
-                'status'  => false,
-                'message' => 'Backup failed: ' . implode("\n", $output),
-            ], 500);
+        putenv("PGPASSWORD={$dbPassword}");
+        $pgDumpPath = '"C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe"';
+
+        // Use temporary folder
+        $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $baseName;
+        mkdir($tempDir, 0777, true);
+
+        $sqlFilePath = $tempDir . DIRECTORY_SEPARATOR . $sqlFilename;
+        $backupFilePath = $tempDir . DIRECTORY_SEPARATOR . $backupFilename;
+        $innerZipPath = $tempDir . DIRECTORY_SEPARATOR . $innerZipFilename;
+        $outerZipPath = $tempDir . DIRECTORY_SEPARATOR . $outerZipFilename;
+
+        // Generate SQL and BACKUP files in temp
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F p {$dbName} > \"{$sqlFilePath}\"", $out1, $sqlReturnCode);
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F c {$dbName} > \"{$backupFilePath}\"", $out2, $backupReturnCode);
+
+        if ($sqlReturnCode !== 0 || $backupReturnCode !== 0) {
+            return response()->json(['status' => false, 'message' => 'SQL dump or backup failed.'], 500);
         }
+
+        // Create inner zip (SQL + BACKUP)
+        $zipInner = new \ZipArchive;
+        if ($zipInner->open($innerZipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            $zipInner->addFile($sqlFilePath, $sqlFilename);
+            $zipInner->addFile($backupFilePath, $backupFilename);
+            $zipInner->close();
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed to create inner zip'], 500);
+        }
+
+        // Create outer zip with folder inside
+        $zipOuter = new \ZipArchive;
+        if ($zipOuter->open($outerZipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            $folder = "{$baseName}/";
+            $zipOuter->addFile($sqlFilePath, $folder . $sqlFilename);
+            $zipOuter->addFile($backupFilePath, $folder . $backupFilename);
+            $zipOuter->addFile($innerZipPath, $folder . $innerZipFilename);
+            $zipOuter->close();
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed to create outer zip'], 500);
+        }
+
+        // Force download & cleanup temp files
+        return response()->download($outerZipPath, $outerZipFilename)->deleteFileAfterSend(true)->deleteFileAfterSend(true);
     }
 }

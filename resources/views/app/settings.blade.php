@@ -53,6 +53,11 @@
 								<x-input type="text" name="footer_text" :required="true" value="{{ $data->footer_text }}" placeholder="Copyright © 2022. All right reserved." />
 								<div class="valid-feedback"></div>
 							</div>
+                            <div class="col-md-12">
+    <x-label for="phone_number" name="Phone Number" />   {{-- NEW --}}
+    <x-input type="text" name="phone_number" :required="true" value="{{ $data->phone_number }}" placeholder="71793152" />
+    <div class="valid-feedback"></div>
+</div>
 							<div class="col-md-12">
 								<x-label for="language" name="{{ __('app.language') }}" />
 								<x-dropdown-language selected="{{ $data->language_id }}" />

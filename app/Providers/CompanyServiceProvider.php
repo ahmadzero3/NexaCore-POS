@@ -97,23 +97,17 @@ class CompanyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (env('INSTALLATION_STATUS')) {
-            try {
-                if (Schema::hasTable('company')) {
-                    $company = app('company');
+        if (env('INSTALLATION_STATUS') && Schema::hasTable('company')) {
+            $company = app('company');
 
-                    // Timezone and Carbon
-                    date_default_timezone_set($company['timezone']);
-                    Carbon::setLocale($company['timezone']);
-                    (new Carbon())->settings(['strictMode' => true]);
+            // Timezone and Carbon
+            date_default_timezone_set($company['timezone']);
+            Carbon::setLocale($company['timezone']);
+            (new Carbon())->settings(['strictMode' => true]);
 
-                    // Mail
-                    Config::set('mail.from.address', $company['email']);
-                    Config::set('mail.from.name', $company['name']);
-                }
-            } catch (\Exception $e) {
-                // Database not available during build, skip company configuration
-            }
+            // Mail
+            Config::set('mail.from.address', $company['email']);
+            Config::set('mail.from.name', $company['name']);
         }
     }
 }

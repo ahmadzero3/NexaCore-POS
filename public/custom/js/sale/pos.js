@@ -1698,64 +1698,68 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Wait for the entire page to load completely
     window.addEventListener('load', function () {
-        // Add a small delay to ensure everything is ready
         setTimeout(function () {
             let customerDisplayWindow = null;
 
-            // Open customer display window
-            function openCustomerDisplay() {
-                const url = window.customerDisplayRoute;
-                const width = 700;
-                const height = 800;
-                const left = screen.width - width - 20;
-                const top = 50;
+            async function openCustomerDisplay() {
+                const url = window.location.origin + "/sale/invoice/customer-display";
 
-                // Only open if not already open or if closed
-                if (!customerDisplayWindow || customerDisplayWindow.closed) {
+                if ("getScreenDetails" in window) {
+                    try {
+                        const details = await window.getScreenDetails();
+
+                        // pick non-primary screen
+                        const otherScreen = details.screens.find(s => !s.isPrimary);
+                        const target = otherScreen || details.currentScreen;
+
+                        const specs = `left=${target.availLeft},top=${target.availTop},width=${target.availWidth},height=${target.availHeight},resizable=1,scrollbars=0`;
+
+                        customerDisplayWindow = window.open(url, "customer_display", specs);
+
+                        if (customerDisplayWindow) {
+                            customerDisplayWindow.focus();
+                        }
+                    } catch (e) {
+                        // silently ignore errors
+                    }
+                } else {
                     customerDisplayWindow = window.open(
                         url,
-                        'customer_display',
-                        `width=${width},height=${height},left=${left},top=${top}`
+                        "customer_display",
+                        "width=800,height=600"
                     );
-
-                    if (!customerDisplayWindow || customerDisplayWindow.closed) {
-                        console.warn(
-                            'Customer display window was blocked. Please allow popups for this site.'
-                        );
-                        // Try again after a delay if blocked
-                        setTimeout(openCustomerDisplay, 2000);
-                    }
                 }
             }
 
-            // Send data to customer display
+
+            function sendWarehouseInfo() {
+                if (!customerDisplayWindow || customerDisplayWindow.closed) return;
+                var currentWarehouseId = $('#warehouse_id').val() || '';
+                var currentWarehouseName = $("#warehouse_id option:selected").text() || 'N/A';
+                customerDisplayWindow.postMessage({
+                    type: 'INITIAL_WAREHOUSE_INFO',
+                    warehouseId: currentWarehouseId,
+                    warehouseName: currentWarehouseName
+                }, '*');
+            }
+
             function updateCustomerDisplay() {
                 if (!customerDisplayWindow || customerDisplayWindow.closed) {
-                    // Try to reopen if closed
                     openCustomerDisplay();
-                    // Wait a bit for the window to open before updating
                     setTimeout(updateCustomerDisplay, 1000);
                     return;
                 }
 
                 const items = [];
                 $('#invoiceItemsTable tbody tr').not('.default-row').each(function () {
-                    const name = $(this).find('td:eq(0) label.form-label').text()
-                        .trim();
+                    const name = $(this).find('td:eq(0) label.form-label').text().trim();
                     const quantity = $(this).find('input[name^="quantity"]').val();
-                    const unitPrice = $(this).find('input[name^="sale_price"]')
-                        .val();
+                    const unitPrice = $(this).find('input[name^="sale_price"]').val();
                     const total = $(this).find('input[name^="total"]').val();
 
                     if (name && quantity) {
-                        items.push({
-                            name,
-                            quantity,
-                            unitPrice,
-                            total
-                        });
+                        items.push({ name, quantity, unitPrice, total });
                     }
                 });
 
@@ -1774,45 +1778,48 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, '*');
                 } catch (e) {
                     console.error('Error sending message to customer display:', e);
-                    // If there's an error, try to reopen the window
                     openCustomerDisplay();
                 }
             }
 
-            // Open customer display after main page is fully loaded
             openCustomerDisplay();
 
-            // Update customer display when items change
             const observer = new MutationObserver(updateCustomerDisplay);
             const targetNode = document.getElementById('invoiceItemsTable');
             if (targetNode) {
-                observer.observe(targetNode, {
-                    childList: true,
-                    subtree: true
-                });
+                observer.observe(targetNode, { childList: true, subtree: true });
             }
 
-            $(document).on('change',
-                '#invoiceItemsTable input, input[name^="payment_amount"]',
-                updateCustomerDisplay);
+            $(document).on('change', '#invoiceItemsTable input, input[name^="payment_amount"]', updateCustomerDisplay);
 
-            // Listen for messages from display
             window.addEventListener('message', function (event) {
                 if (event.data.type === 'CUSTOMER_DISPLAY_READY') {
+                    sendWarehouseInfo();
                     setTimeout(updateCustomerDisplay, 500);
                 }
             });
 
-            // Initial update after a delay to ensure the window is ready
             setTimeout(updateCustomerDisplay, 2000);
 
-            // Check if window is still open periodically
             setInterval(function () {
                 if (customerDisplayWindow && customerDisplayWindow.closed) {
                     openCustomerDisplay();
                     setTimeout(updateCustomerDisplay, 1000);
                 }
             }, 3000);
-        }, 1000); // 1 second delay after page load
+
+            // warehouse change listener
+            $(document).on('change', '#warehouse_id', function () {
+                var selectedWarehouseId = $(this).val();
+                var selectedWarehouseName = $("#warehouse_id option:selected").text();
+                if (customerDisplayWindow && !customerDisplayWindow.closed) {
+                    customerDisplayWindow.postMessage({
+                        type: 'WAREHOUSE_CHANGED',
+                        warehouseId: selectedWarehouseId,
+                        warehouseName: selectedWarehouseName
+                    }, '*');
+                }
+            });
+        }, 1000);
     });
 });

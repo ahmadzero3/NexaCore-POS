@@ -36,13 +36,22 @@
                 </li>
             @endforeach
 
+            <li class="list__item {{ (extension_loaded('nd_pdo_mysql') || extension_loaded('pdo_mysql')) ? 'success' : 'error' }}">
 
+                nd_pdo_mysql <b>or</b> pdo_mysql
+                <i class="fa fa-fw fa-{{ (extension_loaded('nd_pdo_mysql') || extension_loaded('pdo_mysql')) ? 'check-circle-o' : 'exclamation-circle' }} row-icon" aria-hidden="true"></i>
+            </li>
         </ul>
     @endforeach
 
     @php
-    // MySQL extensions check removed - using PostgreSQL
-    // $phpSupportInfo['supported'] remains as determined by other requirements
+    if($phpSupportInfo['supported']){
+        if (extension_loaded('nd_pdo_mysql') || extension_loaded('pdo_mysql')) {
+            $phpSupportInfo['supported'] = true;
+        } else {
+            $phpSupportInfo['supported'] = false;
+        }
+    }
 
 
 

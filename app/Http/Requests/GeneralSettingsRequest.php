@@ -24,6 +24,7 @@ class GeneralSettingsRequest extends FormRequest
         return [
             'application_name'  =>  ['required', 'string', 'max:100'],
             'footer_text'       =>  ['required', 'string', 'max:100'],
+            'phone_number'      =>  ['required|string|max:20'],
             'language_id'       =>  ['required', 'max:20'],
             'timezone'       =>  ['required', 'string', 'max:100'],
             'date_format'       =>  ['required', 'string', 'max:100'],
@@ -45,5 +46,4 @@ class GeneralSettingsRequest extends FormRequest
             'language.required' => 'A Language should not be empty',
         ];
     }
-
 }

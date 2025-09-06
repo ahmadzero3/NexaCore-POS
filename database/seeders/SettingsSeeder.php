@@ -15,7 +15,8 @@ class SettingsSeeder extends Seeder
     {
         AppSettings::create([
             'application_name'  => 'Synkode',
-            'footer_text'       => 'Copyright© Synkode - 2025',
+            'footer_text'       => 'Copyright © Synkode - 2025',
+            'phone_number'      => '71793152',
             'language_id'       => 1,
         ]);
     }

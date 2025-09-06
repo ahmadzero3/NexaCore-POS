@@ -1,345 +1,66 @@
-# NexaCore-POS
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-NexaCore-POS is a comprehensive Point of Sale (POS) system built with Laravel, designed to streamline various business operations. This application provides a robust backend for managing sales, purchases, inventory, accounts, and more.
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-## Key Features
+## About Laravel
 
-Based on the application's structure, NexaCore-POS is designed to handle the following core functionalities:
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-### Sales Management
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
--   **Order Processing**: Efficiently create and manage customer orders.
--   **Product Sales**: Handle the sale of various items, including pricing and quantity management.
--   **Tax Calculation**: Apply and manage taxes on sales transactions.
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-### Purchase Management
+## Learning Laravel
 
--   **Supplier Management**: Keep track of suppliers and their details.
--   **Purchase Orders**: Create and manage purchase orders for inventory replenishment.
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-### Inventory Management
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
--   **Item Management**: Define and manage various items, including their units and categories.
--   **Stock Control**: Monitor and update stock levels for all items.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### Financial Management
+## Laravel Sponsors
 
--   **Account Management**: Manage different financial accounts within the system.
--   **Expense Tracking**: Record and categorize business expenses.
--   **Payment Processing**: Handle various payment methods for sales and purchases.
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### User and Role Management
+### Premium Partners
 
--   **User Accounts**: Create and manage user accounts with different access levels.
--   **Role-Based Access Control**: Assign roles to users to control their permissions within the system.
-
-### Customer and Party Management
-
--   **Customer Database**: Maintain a database of customer information.
--   **Party Management**: Manage other relevant parties involved in business operations.
-
-### Reporting and Analytics
-
--   The system is structured to support various reports related to sales, purchases, expenses, and inventory, providing insights into business performance.
-
-### Multi-language Support
-
--   The application supports multiple languages (Arabic, English, Hindi), allowing for a localized user experience.
-
-## Technology Stack
-
--   **Backend**: Laravel (PHP Framework)
--   **Frontend**: JavaScript, CSS (likely with Tailwind CSS based on `tailwind.config.js`)
--   **Build Tool**: Vite
--   **Dependency Management**: Composer (PHP), npm/Yarn (Node.js)
-
-## Installation and Setup
-
-NexaCore-POS can be set up using Docker in two ways: **Quick Setup (Recommended for Docker)** or **Web Installer Setup**.
-
-### Prerequisites
-
--   Docker Desktop (or Docker Engine and Docker Compose) installed on your system.
-
-### Option 1: Quick Docker Setup (Recommended)
-
-This method bypasses the web installer and sets up the application directly through command line.
-
-#### 1. Update Environment Variables
-
-Copy the `.env.example` file to `.env` and configure it for Docker:
-
-```bash
-cp .env.example .env
-```
-
-Open the `.env` file and ensure these settings:
-
-```env
-# Skip the web installer for Docker setup
-INSTALLATION_STATUS=true
-
-# Application settings
-APP_NAME="NexaCore POS"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=http://localhost
-
-# Database configuration for Docker
-DB_CONNECTION=pgsql
-DB_HOST=db
-DB_PORT=5432  # Internal port (see .env.docker for external port configuration)
-DB_DATABASE=laravel
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-
-# Note: To connect to the database from outside Docker:
-# Check the EXTERNAL_DB_PORT value in .env.docker file
-# Default: Host: localhost, Port: 5433, Database: laravel
-
-# Mail configuration (optional)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=your-email@gmail.com
-MAIL_FROM_NAME="NexaCore POS"
-```
-
-#### 2. Build and Start the Application
-
-```bash
-# Build and start containers
-make dev
-
-# Or manually:
-make build
-make up
-make install
-make key
-make migrate
-make seed
-```
-
-#### 3. Access the Application
-
-Once setup is complete, access the application at `http://localhost`
-
-**Default Admin Credentials:**
-
--   Email: `admin@example.com`
--   Password: `12345678`
-
-### Option 2: Web Installer Setup
-
-If you prefer to use the web installer interface:
-
-#### 1. Update Environment Variables
-
-```bash
-cp .env.example .env
-```
-
-Configure the `.env` file:
-
-```env
-# Enable web installer
-INSTALLATION_STATUS=false
-
-# Database configuration for Docker
-DB_CONNECTION=pgsql
-DB_HOST=db
-DB_PORT=5432  # Internal port (see .env.docker for external port configuration)
-DB_DATABASE=laravel
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-```
-
-#### 2. Start the Application
-
-```bash
-make dev
-```
-
-#### 3. Complete Web Installation
-
-1. Navigate to `http://localhost/install`
-2. Follow the installation wizard:
-    - **Requirements**: Verify server requirements
-    - **Permissions**: Confirm directory permissions
-    - **Environment**: Configure application settings
-        - App Name: `NexaCore POS`
-        - Database: Use the PostgreSQL settings above
-        - Admin Email: Your email address
-        - **Envato Fields**: Leave empty (optional - username/purchase code not required)
-    - **Final**: Complete installation
-
-#### 4. Post-Installation
-
-After completing the web installer, update your `.env` file:
-
-```env
-INSTALLATION_STATUS=true
-```
-
-## Production Deployment
-
-For production environments, additional configuration and security measures are required.
-
-### Production Setup
-
-#### 1. Environment Configuration
-
-Create a production `.env` file with the following settings:
-
-```env
-# Application settings
-APP_NAME="NexaCore POS"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://your-domain.com
-APP_KEY=base64:your-generated-key
-
-# Installation status
-INSTALLATION_STATUS=true
-
-# Database configuration (use your production database)
-DB_CONNECTION=pgsql
-DB_HOST=your-db-host
-DB_PORT=5433
-DB_DATABASE=your-production-db
-DB_USERNAME=your-db-user
-DB_PASSWORD=your-secure-password
-
-# Mail configuration
-MAIL_MAILER=smtp
-MAIL_HOST=your-smtp-host
-MAIL_PORT=587
-MAIL_USERNAME=your-email@domain.com
-MAIL_PASSWORD=your-secure-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=noreply@your-domain.com
-MAIL_FROM_NAME="NexaCore POS"
-
-# Session and cache (for production)
-SESSION_DRIVER=database
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
-
-# Redis configuration (optional but recommended)
-REDIS_HOST=redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-```
-
-#### 2. Production Build
-
-Run the production build:
-
-```bash
-# Build and start production environment
-make prod
-
-# Or manually:
-make build
-make up
-```
-
-#### 3. Production Considerations
-
-**Security:**
-
--   Use strong, unique passwords for all database and application credentials
--   Enable HTTPS/SSL certificates for your domain
--   Configure firewall rules to restrict access to necessary ports only
--   Regularly update Docker images and dependencies
-
-**Performance:**
-
--   Use a production-grade database server (not the Docker PostgreSQL for high-traffic)
--   Configure Redis for caching and session storage
--   Set up proper logging and monitoring
--   Consider using a reverse proxy like Nginx or Traefik
-
-**Backup:**
-
--   Implement regular database backups
--   Backup uploaded files and application data
--   Test backup restoration procedures
-
-**Monitoring:**
-
--   Set up application monitoring and alerting
--   Monitor Docker container health
--   Track application performance metrics
-
-#### 4. Production Docker Compose (Optional)
-
-For advanced production setups, create a `docker-compose.prod.yml`:
-
-```yaml
-version: "3.8"
-
-services:
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile.app
-        volumes:
-            - ./storage:/var/www/html/storage
-            - ./bootstrap/cache:/var/www/html/bootstrap/cache
-        environment:
-            - APP_ENV=production
-            - APP_DEBUG=false
-        restart: unless-stopped
-
-    web:
-        build:
-            context: .
-            dockerfile: Dockerfile.nginx
-        ports:
-            - "80:80"
-            - "443:443"
-        volumes:
-            - ./storage:/var/www/html/storage
-            - ./public:/var/www/html/public
-            # Add SSL certificates
-            - ./ssl:/etc/nginx/ssl
-        restart: unless-stopped
-
-    redis:
-        image: redis:7-alpine
-        restart: unless-stopped
-        volumes:
-            - redis_data:/data
-
-volumes:
-    redis_data:
-```
-
-Then run: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
-
-### Using the Makefile
-
-A `Makefile` has been created to simplify common Docker commands. For detailed instructions on how to use the `Makefile` and its various commands (development, production, build, up, down, install, key, migrate, artisan, clean), please refer to the <mcfile name="make-steps.md" path="/Users/karimhamadeh/Dev/NexaCore-POS/make-steps.md"></mcfile> file.
-
-### Troubleshooting
-
--   **Permission Errors**: Ensure Docker has proper file permissions
--   **Database Connection**: Verify PostgreSQL container is running with `docker ps`
--   **Port Conflicts**: Change the port in `docker-compose.yml` if port 80 is in use
--   **Installer Issues**: Use Option 1 (Quick Setup) to bypass web installer completely
-
-## Usage
-
-(Instructions on how to use the application's features would typically go here.)
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
 
 ## Contributing
 
-(Guidelines for contributing to the project would typically go here.)
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+
+## Code of Conduct
+
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-(Information about the project's license would typically go here.)
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

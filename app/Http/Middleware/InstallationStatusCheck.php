@@ -15,13 +15,10 @@ class InstallationStatusCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if app is installed using both methods
-        $envInstalled = env('INSTALLATION_STATUS', false) === 'true' || env('INSTALLATION_STATUS', false) === true;
-        $fileInstalled = file_exists(storage_path('installed'));
-        
-        // If not installed by either method, redirect to installer
-        if (!$envInstalled || !$fileInstalled) {
-            return redirect('/install');
+        $installationStatus = (bool) env('INSTALLATION_STATUS') === false;
+
+        if ($installationStatus) {
+            return redirect('/instal');
         }
 
         return $next($request);
