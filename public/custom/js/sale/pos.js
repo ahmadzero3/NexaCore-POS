@@ -1702,26 +1702,36 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () {
             let customerDisplayWindow = null;
 
-            function openCustomerDisplay() {
-                const displayUrl = window.customerDisplayRoute;
+            async function openCustomerDisplay() {
+                const url = window.location.origin + "/sale/invoice/customer-display";
 
-                if (!customerDisplayWindow || customerDisplayWindow.closed) {
-                    customerDisplayWindow = window.open(
-                        displayUrl,
-                        "customerDisplayWindow",
-                        "width=800,height=600,scrollbars=yes,resizable=yes"
-                    );
+                if ("getScreenDetails" in window) {
+                    try {
+                        const details = await window.getScreenDetails();
 
-                    window.addEventListener('message', function (event) {
-                        if (event.data.type === 'REQUEST_INITIAL_WAREHOUSE') {
-                            sendWarehouseInfo();
+                        // pick non-primary screen
+                        const otherScreen = details.screens.find(s => !s.isPrimary);
+                        const target = otherScreen || details.currentScreen;
+
+                        const specs = `left=${target.availLeft},top=${target.availTop},width=${target.availWidth},height=${target.availHeight},resizable=1,scrollbars=0`;
+
+                        customerDisplayWindow = window.open(url, "customer_display", specs);
+
+                        if (customerDisplayWindow) {
+                            customerDisplayWindow.focus();
                         }
-                    });
+                    } catch (e) {
+                        // silently ignore errors
+                    }
                 } else {
-                    customerDisplayWindow.focus();
-                    sendWarehouseInfo();
+                    customerDisplayWindow = window.open(
+                        url,
+                        "customer_display",
+                        "width=800,height=600"
+                    );
                 }
             }
+
 
             function sendWarehouseInfo() {
                 if (!customerDisplayWindow || customerDisplayWindow.closed) return;
