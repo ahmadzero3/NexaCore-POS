@@ -89,6 +89,9 @@ RUN echo '#!/bin/sh' > /entrypoint.sh && \
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
 
+# Copy PHP config
+COPY php.ini /usr/local/etc/php/
+
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Start PHP-FPM

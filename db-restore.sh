@@ -16,12 +16,19 @@ fi
 
 EXT="${BACKUP_FILE##*.}"
 
+# Step 1: Drop and recreate the database (clean restore)
+echo "🗑️ Dropping old database..."
+docker compose exec -T db dropdb -U postgres laravel --if-exists
+echo "🆕 Creating fresh database..."
+docker compose exec -T db createdb -U postgres laravel
+
+# Step 2: Restore based on extension
 if [ "$EXT" = "sql" ]; then
     echo "📂 Restoring from SQL dump..."
-    PGPASSWORD=postgres psql -h db -U postgres -d laravel < "$BACKUP_FILE"
+    docker compose exec -T db psql -U postgres -d laravel < "$BACKUP_FILE"
 elif [ "$EXT" = "backup" ]; then
     echo "📂 Restoring from custom .backup file..."
-    PGPASSWORD=postgres pg_restore -h db -U postgres -d laravel --clean --if-exists "$BACKUP_FILE"
+    docker compose exec -T db pg_restore -U postgres -d laravel --clean --if-exists "$BACKUP_FILE"
 else
     echo "❌ Unsupported file type: $EXT"
     exit 1
