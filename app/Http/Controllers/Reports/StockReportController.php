@@ -165,7 +165,7 @@ class StockReportController extends Controller
 
 
     function getGeneralStockRecords(Request $request): JsonResponse{
-        //try{
+        try{
             $itemId             = $request->input('item_id');
             $brandId             = $request->input('brand_id');
             $categoryId         = $request->input('item_category_id');
@@ -202,11 +202,16 @@ class StockReportController extends Controller
                 $recordsArray[] = [
                                     'warehouse'             => $data->warehouse->name,
                                     'item_name'             => $data->item->name,
+                                    'item_code'             => $data->item->item_code,
                                     'brand_name'            => $data->item->brand->name??'',
                                     'category_name'         => $data->item->category->name,
+                                    'purchase_price'        => $this->formatWithPrecision($data->item->purchase_price, comma:false),
+                                    'sale_price'            => $this->formatWithPrecision($data->item->sale_price, comma:false),
                                     'quantity'              => $this->formatWithPrecision($data->quantity, comma:false),
                                     'unit_name'             => $data->item->baseUnit->name,
                                     'stock_impact_color'    => ($data->quantity <= 0) ? 'danger' : '',
+                                    'stock_value_cost'      => $this->formatWithPrecision($data->item->purchase_price * $data->quantity, comma:false),
+                                    'stock_value_sale'      => $this->formatWithPrecision($data->item->sale_price * $data->quantity, comma:false),
                                 ];
             }
 
@@ -215,13 +220,13 @@ class StockReportController extends Controller
                         'message' => "Records are retrieved!!",
                         'data' => $recordsArray,
                     ]);
-        // } catch (\Exception $e) {
-        //         return response()->json([
-        //             'status' => false,
-        //             'message' => $e->getMessage(),
-        //         ], 409);
+        } catch (\Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                ], 409);
 
-        // }
+        }
     }
 
 }

@@ -173,5 +173,25 @@ return [
         'sale_profit_margin'                        => 'Sale Profit Margin',
         'invalid_profit_margin'                     => 'Invalid Profit Margin',
         'exp'                                       => 'Exp.',
+        //2.4
+        'stock_value_cost'                          => 'Stock Value (Cost)',
+        'stock_value_sale'                          => 'Stock Value (Sale)',
+        'import_items_and_services'                => 'Import Items and Services',
+        'generate_barcode'                          => 'Generate Barcode',
+        'category.edit'                             => 'Category Edit',
+        'category.view'                             => 'Category View',
+        'category.delete'                           => 'Category Delete',
+        'brand.edit'                                => 'Brand Edit',
+        'brand.view'                                => 'Brand View',
+        'brand.delete'                              => 'Brand Delete',
+        'low_stock_items'                           => 'Low Stock Items',
+        //2.4.1
+        'avg_sale_price'                     => 'Sale Price(Avg)',
+        'avg_purchase_price'                     => 'Purchase Price(Avg)',
+        'quantity_sold'                     => 'Quantity Sold',
+        'display_mrp_on_label'              => 'Display MRP on Label',
+        'display_mrp_on_lable_instead_of_sale_price' => 'Display MRP on label instead of Sale Price',
+        'hsn_summary_report' => 'HSN Summary Report',
+        'hsn_summary' => 'HSN Summary',
 
 ];

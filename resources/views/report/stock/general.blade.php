@@ -44,7 +44,7 @@
 
                                 <div class="card-body p-4 row g-3">
                                         <div class="col-md-12">
-                                            <div class="d-md-flex d-grid align-items-center gap-3 justify-content-end">
+                                            <div class="d-md-flex d-grid align-items-center gap-3">
                                                 <x-button type="submit" class="primary px-4" text="{{ __('app.submit') }}" />
                                                 <x-anchor-tag href="{{ route('dashboard') }}" text="{{ __('app.close') }}" class="btn btn-light px-4" />
                                             </div>
@@ -79,10 +79,16 @@
                                                     <tr class="text-uppercase">
                                                         <th>#</th>
                                                         <th>{{ __('warehouse.warehouse') }}</th>
+                                                        <th>{{ __('item.code') }}</th>
                                                         <th>{{ __('item.item_name') }}</th>
                                                         <th>{{ __('item.brand.brand') }}</th>
+                                                        <th>{{ __('item.category.category') }}</th>
+                                                        <th>{{ __('item.purchase_price') }}</th>
+                                                        <th>{{ __('item.sale_price') }}</th>
                                                         <th>{{ __('item.quantity') }}</th>
                                                         <th>{{ __('unit.unit') }}</th>
+                                                        <th>{{ __('item.stock_value_cost') }}</th>
+                                                        <th>{{ __('item.stock_value_sale') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>

@@ -160,11 +160,11 @@ $(function() {
      * PDF, SpreadSheet
      * */
     $(document).on("click", '#generate_pdf', function() {
-        tableId.tableExport({type:'pdf',escape:'false'});
+        tableId.tableExport({type:'pdf',escape:'false', fileName: 'Batch-Item-Stock-Report',});
     });
 
     $(document).on("click", '#generate_excel', function() {
-        tableId.tableExport({type:'xlsx',escape:'false'});
+        tableId.tableExport({type:'xlsx',escape:'false', fileName: 'Batch-Item-Stock-Report',});
     });
 
 });//main function
