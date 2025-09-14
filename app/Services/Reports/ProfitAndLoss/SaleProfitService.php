@@ -6,17 +6,21 @@ use App\Models\Purchase\Purchase;
 use App\Services\PaymentTransactionService;
 use App\Models\Sale\Sale;
 use App\Models\User;
+use App\Services\ItemTransactionService;
 
 class SaleProfitService{
 
     private $paymentTransactionService;
 
-    public function __construct(PaymentTransactionService $paymentTransactionService)
+    private $itemTransactionService;
+
+    public function __construct(PaymentTransactionService $paymentTransactionService, ItemTransactionService $itemTransactionService)
     {
         $this->paymentTransactionService = $paymentTransactionService;
+        $this->itemTransactionService = $itemTransactionService;
     }
 
-    public function saleProfitTotalAmount($fromDate, $toDate, $warehouseId = null)
+    public function saleProfitTotalAmount($fromDate, $toDate, $warehouseId = null, $useSaleAvgDateRange = false)
     {
         // If warehouseId is not provided, fetch warehouses accessible to the user
         $warehouseIds = $warehouseId ? [$warehouseId] : User::find(auth()->id())->getAccessibleWarehouses()->pluck('id');
@@ -24,80 +28,42 @@ class SaleProfitService{
         // Fetch sale IDs within the date range
         $salesIds = Sale::whereBetween('sale_date', [$fromDate, $toDate])->pluck('id')->toArray();
 
-        // Fetch sale item transactions for the given warehouse(s) and sale IDs
-        $saleItemTransactions = ItemTransaction::with('item')
-            ->whereIn('warehouse_id', $warehouseIds)
+        $saleItems = ItemTransaction::whereIn('warehouse_id', $warehouseIds)
             ->whereIn('transaction_id', $salesIds)
             ->where('transaction_type', 'Sale')
-            ->get();
+            ->get(['item_id', 'quantity', 'tax_amount']);
 
-        // Fetch purchase item transactions for the same items
-        $purchaseItemTransactions = ItemTransaction::whereIn('warehouse_id', $warehouseIds)
-            ->whereIn('item_id', $saleItemTransactions->pluck('item_id')->unique())
-            ->where(function ($query) {
-                $query->where('transaction_type', getMorphedModelName(Purchase::class))
-                    ->orWhere('transaction_type', getMorphedModelName('Item Opening'))
-                    ->orWhere(function ($subQuery) {
-                        $subQuery->where('transaction_type', getMorphedModelName('Stock Transfer'))
-                            ->where('unique_code', 'STOCK_RECEIVE');
-                    });
-            })
-            ->get()
-            ->groupBy('item_id');
 
-        $totalPurchaseCost = 0;
-        $totalSalePrice = 0;
-        $totalTheoreticalSalePrice = 0;  // Before discounts
-        $totalDiscounts = 0;
+        $totalAvgPurchasePrice = 0;
+        $totalAvgSalePrice = 0;
+        $totalSaleTaxAmount = 0;
 
-        foreach ($saleItemTransactions as $saleItemTransaction) {
-            $itemModel = $saleItemTransaction->item;
+        $itemIds = $saleItems->pluck('item_id')->unique()->values()->toArray();
+        $itemSaleAndPurchaseData = $this->itemTransactionService->calculateEachItemSaleAndPurchasePrice($itemIds, $warehouseId, useGlobalPurchasePrice: true, saleTransactionDateRange: !$useSaleAvgDateRange ? [] : ['from_date' => $fromDate, 'to_date' => $toDate]);
 
-            // Get purchase transactions for the current item
-            $itemPurchaseTransactions = $purchaseItemTransactions->get($saleItemTransaction->item_id) ?? collect();
+        foreach ($saleItems as $item) {
+            $itemId = $item['item_id'];
+            $quantity = $item['quantity'];
 
-            // Calculate total purchase cost and quantity
-            $purchaseTotalSum = $itemPurchaseTransactions->sum('total') + $itemPurchaseTransactions->sum('charge_amount') + $itemPurchaseTransactions->sum('charge_tax_amount');
-            
-            $purchaseTotalQty = ($itemModel->conversion_rate != 1) ? $itemPurchaseTransactions->sum(function ($transaction) use ($itemModel) {
-                // Convert secondary units to base units if necessary
-                if ($transaction->unit_id == $itemModel->secondary_unit_id && $itemModel->conversion_rate > 0) {
-                    return $transaction->quantity / $itemModel->conversion_rate;
-                }
-                return $transaction->quantity;
-            }) : $itemPurchaseTransactions->sum('quantity');
+            if (isset($itemSaleAndPurchaseData[$itemId])) {
+                $purchaseData = $itemSaleAndPurchaseData[$itemId]['purchase'] ?? [];
+                $saleData = $itemSaleAndPurchaseData[$itemId]['sale'] ?? [];
 
-            if ($purchaseTotalQty > 0) {
-                // Calculate average purchase price per base unit
-                $averagePurchasePricePerBaseUnit = $purchaseTotalSum / $purchaseTotalQty;
-
-                // Convert sale quantity to base units if necessary
-                $saleQtyInBaseUnits = $saleItemTransaction->quantity;
-                if ($saleItemTransaction->unit_id == $itemModel->secondary_unit_id && $itemModel->conversion_rate > 0) {
-                    $saleQtyInBaseUnits = $saleItemTransaction->quantity / $itemModel->conversion_rate;
-                }
-
-                // Calculate purchase cost based on sale quantity in base units
-                $itemPurchaseCost = $averagePurchasePricePerBaseUnit * $saleQtyInBaseUnits;
-                $totalPurchaseCost += $itemPurchaseCost;
-
-                // Calculate theoretical and actual sale prices
-                $theoreticalSaleTotal = $saleItemTransaction->total;  // Before discounts
-                $actualSaleTotal = $saleItemTransaction->total - $saleItemTransaction->discount_amount - $saleItemTransaction->tax_amount;
-                
-                $totalTheoreticalSalePrice += $theoreticalSaleTotal;
-                $totalSalePrice += $actualSaleTotal;
-                $totalDiscounts += $saleItemTransaction->discount_amount;
+                $totalAvgPurchasePrice += ($purchaseData['average_purchase_price'] ?? 0) * $quantity;
+                $totalAvgSalePrice += ($saleData['average_sale_price'] ?? 0) * $quantity;
+                $totalSaleTaxAmount += $item['tax_amount'];
             }
+
         }
- 
+
+
         return [
-            'totalPurchaseCost' => $totalPurchaseCost,
-            'totalTheoreticalSalePrice' => $totalTheoreticalSalePrice,
-            'totalDiscounts' => $totalDiscounts,
-            'totalSalePrice' => $totalSalePrice,
-            'theoreticalProfit' => $totalTheoreticalSalePrice - $totalPurchaseCost,
-            'actualProfit' => $totalSalePrice - $totalPurchaseCost
+            'totalAvgPurchasePrice' => $totalAvgPurchasePrice,
+            'totalAvgSalePrice' => $totalAvgSalePrice,
+            'totalSaleTaxAmount' => $totalSaleTaxAmount,
+            'saleGrossProfit' => $totalAvgSalePrice - $totalAvgPurchasePrice,
+            'saleNetProfit' => ($totalAvgSalePrice - $totalAvgPurchasePrice) - $totalSaleTaxAmount,
+
         ];
     }
 
