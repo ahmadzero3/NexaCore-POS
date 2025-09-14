@@ -102,17 +102,27 @@ $(function() {
         var tr = "";
 
         var totalQuantity = parseFloat(0);
+        var totalStockValueCost = parseFloat(0);
+        var totalStockValueSale = parseFloat(0);
 
         $.each(response.data, function(index, item) {
             totalQuantity += parseFloat(item.quantity);
+            totalStockValueCost += parseFloat(item.stock_value_cost);
+            totalStockValueSale += parseFloat(item.stock_value_sale);
 
              tr += "<tr>"
              tr += "<td>" + id++ + "</td>";
              tr += "<td>" + item.warehouse + "</td>";
+             tr += "<td>" + item.item_code + "</td>";
              tr += "<td>" + item.item_name + "</td>";
              tr += "<td>" + item.brand_name + "</td>";
+             tr += "<td>" + item.category_name + "</td>";
+             tr += "<td class='text-end'>" + item.purchase_price + "</td>";
+             tr += "<td class='text-end'>" + item.sale_price + "</td>";
              tr += `<td class='text-end text-${item.stock_impact_color}'>` + _parseQuantity(item.quantity) + "</td>";
              tr += "<td>" + item.unit_name + "</td>";
+             tr += "<td class='text-end'>" + item.stock_value_cost + "</td>";
+             tr += "<td class='text-end'>" + item.stock_value_sale + "</td>";
              tr += "</tr>"
         });
 
@@ -120,6 +130,8 @@ $(function() {
         tr += `<td colspan='0' class='text-end tfoot-first-td'>${_lang.total}</td>"`;
         tr += "<td class='text-end'>" + _parseQuantity(totalQuantity) + "</td>";
         tr += "<td></td>";
+        tr += "<td class='text-end'>" + _parseQuantity(totalStockValueCost) + "</td>";
+        tr += "<td class='text-end'>" + _parseQuantity(totalStockValueSale) + "</td>";
         tr += "</tr>";
 
         // Clear existing rows:
@@ -129,7 +141,7 @@ $(function() {
         /**
          * Set colspan of the table bottom
          * */
-        $('.tfoot-first-td').attr('colspan', columnCountWithoutDNoneClass(1)-1);
+        $('.tfoot-first-td').attr('colspan', columnCountWithoutDNoneClass(4));
     }
 
     function showNoRecordsMessageOnTableBody() {
@@ -157,11 +169,11 @@ $(function() {
      * PDF, SpreadSheet
      * */
     $(document).on("click", '#generate_pdf', function() {
-        tableId.tableExport({type:'pdf',escape:'false'});
+        tableId.tableExport({type:'pdf',escape:'false', fileName: 'General-Item-Stock-Report'});
     });
 
     $(document).on("click", '#generate_excel', function() {
-        tableId.tableExport({type:'xlsx',escape:'false'});
+        tableId.tableExport({type:'xlsx',escape:'false', fileName: 'General-Item-Stock-Report'});
     });
 
 });//main function
