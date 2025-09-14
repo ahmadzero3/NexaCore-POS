@@ -36,6 +36,25 @@ return [
                 ],
     //1.4.3
     'net_summary'                    => 'Net Summary',
+    //2.4.1
+    'item_wise'                   => 'Item Wise',
+    'invoice_wise'                   => 'Invoice Wise',
+    'summary'                       => 'Summary',
+    'summary_and_gross_profit' => 'Summary & Gross Profit',
+    'itew_wise_profit_and_loss' => 'Item Wise Profit and Loss',
+    'brand_wise_profit_and_loss' => 'Brand Wise Profit and Loss',
+    'invoice_wise_profit_and_loss' => 'Invoice Wise Profit and Loss',
+    'profit_by_items'                => 'Profit by Items',
+    'profit_by_brands'               => 'Profit by Brands',
+    'profit_by_invoice'             => 'Profit by Invoice',
+    'profit_summary'             => 'Profit Summary',
+    'profit_by_categories'           => 'Profit by Categories',
+    'category_wise_profit_and_loss' => 'Category Wise Profit and Loss',
+    'profit_by_customers'           => 'Profit by Customers',
+    'customer_wise_profit_and_loss' => 'Customer Wise Profit and Loss',
+    'use_only_selected_date_range' => 'Use Sale Average from the selected date range only',
+    'use_only_selected_date_range_tooltip' => 'If unchecked, average sale is calculated from all invoices.',
+
 
 
 ];
