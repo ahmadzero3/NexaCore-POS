@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Items;
 
+use App\Enums\ItemTransactionUniqueCode;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
-use App\Traits\FormatNumber; 
+use App\Traits\FormatNumber;
 use App\Traits\FormatsDateInputs;
 use App\Models\Items\Item;
 use App\Models\Items\ItemTransaction;
+use App\Models\StockAdjustment;
+use App\Models\StockTransfer;
 use App\Services\StockImpact;
+use App\Services\ItemTransactionService;
 
 class ItemTransactionController extends Controller
 {
@@ -21,13 +25,21 @@ class ItemTransactionController extends Controller
 
     private $stockImpact;
 
-    function __construct(StockImpact $stockImpact)
+    public $itemTransactionService;
+
+    function __construct(StockImpact $stockImpact, ItemTransactionService $itemTransactionService)
     {
         $this->stockImpact = $stockImpact;
+        $this->itemTransactionService = $itemTransactionService;
     }
 
     public function list($id) : View {
         $item = Item::with('baseUnit', 'category')->find($id);
+
+        $avgPrices = $this->itemTransactionService->calculateEachItemSaleAndPurchasePrice([$id], warehouseId:null, useGlobalPurchasePrice: true);
+        $item->avg_purchase_price = $avgPrices[$id]['purchase']['average_purchase_price'] ?? 0;
+        $item->avg_sale_price = $avgPrices[$id]['sale']['average_sale_price'] ?? 0;
+
         return view('items.transaction.list', compact('item'));
     }
 
@@ -44,6 +56,18 @@ class ItemTransactionController extends Controller
                     })
                     ->addColumn('price', function ($row) {
                         return $this->formatWithPrecision($row->unit_price);
+                    })
+                    ->addColumn('transaction_type', function ($row) {
+
+                        if($row->transaction_type == getMorphedModelName(StockAdjustment::class)){
+                            return $row->transaction_type . (($row->unique_code == ItemTransactionUniqueCode::STOCK_ADJUSTMENT_INCREASE->value) ? " (". __('app.increase').")" : " (".__('app.decrease').")");
+                        }
+                        else if($row->transaction_type == getMorphedModelName(StockTransfer::class)){
+                            return $row->transaction_type . (($row->unique_code == ItemTransactionUniqueCode::STOCK_RECEIVE->value) ? " (". __('app.receive').")" : " (".__('app.send').")")    ;
+                        }
+
+                        return $row->transaction_type;
+
                     })
                     ->addColumn('quantity', function ($row) {
                         return $this->formatQuantity($row->quantity);

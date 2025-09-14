@@ -312,4 +312,9 @@ return [
     'thermal_print' => 'طباعة حرارية',
     'a5_print' => 'طباعة A5',
     'example' => 'مثال',
+
+    //2.4.1
+    'invoice_from_date' => 'الفاتورة من تاريخ',
+    'invoice_to_date' => 'الفاتورة إلى تاريخ',
+    'receive' => 'استلام',
 ];

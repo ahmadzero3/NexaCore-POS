@@ -847,6 +847,16 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/profit-and-loss/get-records', [ProfitReportController::class, 'getProfitRecords'])->name('report.profit_and_loss.ajax');
 
+        Route::post('/invoice-wise-profit-and-loss/get-records', [ProfitReportController::class, 'getInvoiceWiseProfitRecords'])->name('report.invoice_wise_profit_and_loss.ajax');
+
+        Route::post('/item-wise-profit-and-loss/get-records', [ProfitReportController::class, 'getItemWiseProfitRecords'])->name('report.item_wise_profit_and_loss.ajax');
+
+        Route::post('/brand-wise-profit-and-loss/get-records', [ProfitReportController::class, 'getBrandWiseProfitRecords'])->name('report.brand_wise_profit_and_loss.ajax');
+
+        Route::post('/category-wise-profit-and-loss/get-records', [ProfitReportController::class, 'getCategoryWiseProfitRecords'])->name('report.category_wise_profit_and_loss.ajax');
+
+        Route::post('/customer-wise-profit-and-loss/get-records', [ProfitReportController::class, 'getCustomerWiseProfitRecords'])->name('report.customer_wise_profit_and_loss.ajax');
+
         /*Report -> Expense -> Expense  */
         Route::get('/expense', function () {
             return view('report.expense.expense');

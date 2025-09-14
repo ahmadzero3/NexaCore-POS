@@ -305,5 +305,10 @@ return [
     //2.3
     'example'                           => 'Example',
 
+    //2.4.1
+    'invoice_from_date' => 'Invoice From Date',
+    'invoice_to_date' => 'Invoice To Date',
+    'receive' => 'Receive',
+
 
 ];

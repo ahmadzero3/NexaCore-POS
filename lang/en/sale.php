@@ -100,4 +100,9 @@ return [
     //2.3
     'sale_return'                   => 'Sale Return',
 
+    //2.4.1
+    'sale_total'                => 'Sale Total',
+    'invoice_no'                => 'Invoice Number',
+    'sale_amount'              => 'Sale Amount',
+
 ];
