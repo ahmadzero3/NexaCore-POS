@@ -18,6 +18,7 @@
                     <input type="hidden" id="base_url" value="{{ url('/') }}">
                     <input type="hidden" id="operation" name="operation" value="save">
                     <input type="hidden" id="selectedPaymentTypesArray" value="{{ $selectedPaymentTypesArray }}">
+                    <input type="hidden" name="invoice_status" value="finished">
                     <div class="row">
                         <div class="col-12 col-lg-12">
                             <div class="card">
