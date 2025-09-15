@@ -240,8 +240,11 @@ class AppSettingsController extends Controller
             ], 500);
         }
     }
-    public function databaseBackup()
+public function databaseBackup()
     {
+        // Allow unlimited time for large backups
+        set_time_limit(0);
+
         $timestamp = now()->format('Y-m-d_H-i-s');
         $baseName = "databasebackup_{$timestamp}";
         $sqlFilename = "{$baseName}.sql";
@@ -258,6 +261,21 @@ class AppSettingsController extends Controller
         putenv("PGPASSWORD={$dbPassword}");
         $pgDumpPath = '"C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe"';
 
+        $excludeTables = [
+            'failed_jobs',
+            'jobs',
+            'sessions',
+            'cache',
+            'telescope_entries',
+            'telescope_entries_tags',
+            'telescope_monitoring'
+        ];
+
+        $excludeArgs = '';
+        foreach ($excludeTables as $table) {
+            $excludeArgs .= " --exclude-table={$table}";
+        }
+
         // Use temporary folder
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $baseName;
         mkdir($tempDir, 0777, true);
@@ -268,8 +286,8 @@ class AppSettingsController extends Controller
         $outerZipPath = $tempDir . DIRECTORY_SEPARATOR . $outerZipFilename;
 
         // Generate SQL and BACKUP files in temp
-        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F p {$dbName} > \"{$sqlFilePath}\"", $out1, $sqlReturnCode);
-        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} -F c {$dbName} > \"{$backupFilePath}\"", $out2, $backupReturnCode);
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} {$excludeArgs} -F p {$dbName} > \"{$sqlFilePath}\"", $out1, $sqlReturnCode);
+        exec("{$pgDumpPath} -h {$dbHost} -p {$dbPort} -U {$dbUser} {$excludeArgs} -F c {$dbName} > \"{$backupFilePath}\"", $out2, $backupReturnCode);
 
         if ($sqlReturnCode !== 0 || $backupReturnCode !== 0) {
             return response()->json(['status' => false, 'message' => 'SQL dump or backup failed.'], 500);
