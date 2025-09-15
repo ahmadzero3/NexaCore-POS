@@ -19,6 +19,9 @@ enum ItemTransactionUniqueCode:string{
     case STOCK_TRANSFER                 = 'STOCK_TRANSFER';
     case STOCK_RECEIVE                  = 'STOCK_RECEIVE';
     case QUOTATION                      = 'QUOTATION';
+    case STOCK_ADJUSTMENT               = 'STOCK_ADJUSTMENT';
+    case STOCK_ADJUSTMENT_INCREASE        = 'STOCK_ADJUSTMENT_INCREASE';
+    case STOCK_ADJUSTMENT_DECREASE        = 'STOCK_ADJUSTMENT_DECREASE';
 
 
 }
