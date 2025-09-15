@@ -240,51 +240,64 @@ class AppSettingsController extends Controller
             ], 500);
         }
     }
-    public function databaseBackup()
-    {
-        $timestamp = now()->format('Y-m-d_H-i-s');
-        $backupDir = storage_path('app/backups');
+  public function databaseBackup()
+{
+    $timestamp = now()->format('Y-m-d_H-i-s');
+    $backupDir = sys_get_temp_dir(); // ✅ Use temp folder only
 
-        if (!file_exists($backupDir)) {
-            mkdir($backupDir, 0775, true);
-        }
+    $sqlFile = $backupDir . "/backup_{$timestamp}.sql";
+    $customFile = $backupDir . "/backup_{$timestamp}.backup";
 
-        $sqlFile = $backupDir . "/backup_{$timestamp}.sql";
-        $customFile = $backupDir . "/backup_{$timestamp}.backup";
+    // ❌ Tables to exclude from backup
+    $excludeTables = [
+        'failed_jobs',
+        'jobs',
+        'sessions',
+        'cache',
+        'telescope_entries',
+        'telescope_entries_tags',
+        'telescope_monitoring'
+    ];
 
-        // ✅ Run pg_dump for SQL
-        $commandSql = "PGPASSWORD=postgres pg_dump -h db -U postgres laravel > \"$sqlFile\"";
-
-        // ✅ Run pg_dump for custom format (-Fc)
-        $commandCustom = "PGPASSWORD=postgres pg_dump -h db -U postgres -Fc laravel > \"$customFile\"";
-
-        exec($commandSql, $outputSql, $returnCodeSql);
-        exec($commandCustom, $outputCustom, $returnCodeCustom);
-
-        if (
-            $returnCodeSql === 0 && file_exists($sqlFile) &&
-            $returnCodeCustom === 0 && file_exists($customFile)
-        ) {
-
-            // Zip both files before download
-            $zipFile = $backupDir . "/backup_{$timestamp}.zip";
-            $zip = new \ZipArchive();
-            if ($zip->open($zipFile, \ZipArchive::CREATE) === true) {
-                $zip->addFile($sqlFile, basename($sqlFile));
-                $zip->addFile($customFile, basename($customFile));
-                $zip->close();
-            }
-
-            // Clean up individual files, keep only the zip
-            @unlink($sqlFile);
-            @unlink($customFile);
-
-            return response()->download($zipFile)->deleteFileAfterSend(true);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Backup failed'
-            ], 500);
-        }
+    // Build exclusion string for pg_dump
+    $excludeArgs = '';
+    foreach ($excludeTables as $table) {
+        $excludeArgs .= " --exclude-table={$table}";
     }
+
+    // ✅ Run pg_dump for SQL
+    $commandSql = "PGPASSWORD=postgres pg_dump -h db -U postgres {$excludeArgs} laravel > \"$sqlFile\"";
+
+    // ✅ Run pg_dump for custom format (-Fc)
+    $commandCustom = "PGPASSWORD=postgres pg_dump -h db -U postgres {$excludeArgs} -Fc laravel > \"$customFile\"";
+
+    exec($commandSql, $outputSql, $returnCodeSql);
+    exec($commandCustom, $outputCustom, $returnCodeCustom);
+
+    if (
+        $returnCodeSql === 0 && file_exists($sqlFile) &&
+        $returnCodeCustom === 0 && file_exists($customFile)
+    ) {
+        // Zip both files before download
+        $zipFile = $backupDir . "/backup_{$timestamp}.zip";
+        $zip = new \ZipArchive();
+        if ($zip->open($zipFile, \ZipArchive::CREATE) === true) {
+            $zip->addFile($sqlFile, basename($sqlFile));
+            $zip->addFile($customFile, basename($customFile));
+            $zip->close();
+        }
+
+        // Clean up individual files, keep only the zip for download
+        @unlink($sqlFile);
+        @unlink($customFile);
+
+        // ✅ Send the zip directly, then remove it
+        return response()->download($zipFile)->deleteFileAfterSend(true);
+    } else {
+        return response()->json([
+            'status' => false,
+            'message' => 'Backup failed'
+        ], 500);
+    }
+}
 }
