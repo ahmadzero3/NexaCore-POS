@@ -4,7 +4,7 @@ async function confirmAction(title = "Are you sure?") {
     return new Promise((resolve) => {
         /* Confirm before Proceeding */
         swal({
-            title: title,
+            title: title ,
             buttons: true,
             dangerMode: true,
         }).then((willDelete) => {
@@ -19,24 +19,26 @@ async function confirmAction(title = "Are you sure?") {
  * Ajax Operation for select2
  * */
 function initSelect2Parties() {
-    $(".party-ajax").select2({
-        theme: "bootstrap-5",
+    $('.party-ajax').select2({
+        theme: 'bootstrap-5',
         allowClear: true,
         cache: true,
         ajax: {
-            url: $("#base_url").val() + "/party/ajax/get-list",
-            dataType: "json",
+            url: $('#base_url').val() + '/party/ajax/get-list',
+            dataType: 'json',
             delay: 250,
-            data: function (params) {
+            data: function(params) {
                 var query = {
                     search: params.term,
-                    party_type: $(".party-ajax").data("party-type"),
+                    party_type: $(".party-ajax").data('party-type'),
+                    page: params.page || 1
                 };
                 return query;
             },
-            processResults: function (data) {
+            processResults: function(data, params) {
+                params.page = params.page || 1;
                 return {
-                    results: data.results.map(function (item) {
+                    results: data.results.map(function(item) {
                         return {
                             id: item.id,
                             text: item.text,
@@ -47,16 +49,19 @@ function initSelect2Parties() {
                             currency_id: item.currency_id,
                         };
                     }),
+                    pagination: {
+                        more: data.hasMore // your backend should return hasMore: true/false
+                    }
                 };
-            },
+            }
         },
-        templateResult: function (data) {
+        templateResult: function(data) {
             if (!data.id) {
                 return data.text; // Placeholder
             }
 
-            var bottomText = "";
-            var balanceText = "";
+            var bottomText = '';
+            var balanceText = '';
             var toPay = _parseFix(data.to_pay);
             var toReceive = _parseFix(data.to_receive);
 
@@ -66,251 +71,319 @@ function initSelect2Parties() {
                 balanceText = `<i class="fadeIn fs-3 text-success bx bx-left-down-arrow-circle"></i> ${toReceive}`;
             }
 
-            if ($(".party-ajax").data("party-type") == "customer") {
-                bottomText += data.is_wholesale_customer
-                    ? "Wholesaler "
-                    : "Retailer ";
+            if ($(".party-ajax").data('party-type') == 'customer') {
+                bottomText += data.is_wholesale_customer ? 'Wholesaler ' : 'Retailer ';
             }
 
             // Customize the dropdown item display
             return $(
                 `<div>
                     <span class='fs-4'>${data.text}</span><br>
-                    ${balanceText}, <small class="">${
-                    bottomText +
-                    '<i class="fadeIn text-primary bx bx-mobile"></i> ' +
-                    (data.mobile ? data.mobile : "-")
-                }</small>
+                    ${balanceText}, <small class="">${bottomText + '<i class="fadeIn text-primary bx bx-mobile"></i> ' + (data.mobile ? data.mobile : '-')}</small>
                 </div>`
             );
         },
-        templateSelection: function (data) {
+        templateSelection: function(data) {
             if (!data.id) {
                 return data.text; // Placeholder
             }
             // Customize the selected item display
             return $(
-                `<span>${data.text} <small class="text-muted">(${
-                    data.mobile ?? "-"
-                })</small></span>`
+                `<span>${data.text} <small class="text-muted">(${data.mobile ?? '-'})</small></span>`
             );
         },
-        escapeMarkup: function (markup) {
+        escapeMarkup: function(markup) {
             return markup; // Allow HTML rendering
-        },
+        }
     });
 }
 
-function initSelect2PaymentType(options = {}) {
-    $(".payment-type-ajax").select2({
-        theme: "bootstrap-5",
+/**
+ * Initialize Select2 for Invoice
+ * Ajax Operation for select2
+ * */
+function initSelect2Invoice() {
+    $('.invoice-ajax').select2({
+        theme: 'bootstrap-5',
         allowClear: true,
         cache: true,
         ajax: {
-            url: $("#base_url").val() + "/payment-type/ajax/get-list",
-            dataType: "json",
+            url: $('#base_url').val() + '/sale/invoice/ajax/get-list',
+            dataType: 'json',
             delay: 250,
-            data: function (params) {
+            data: function(params) {
+                // Select2 sends params.page, default to 1 if not set
+                var page = params.page || 1;
                 var query = {
                     search: params.term,
+                    page: page
                 };
                 return query;
             },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
-        },
-        ...options, //its a valid code, which is called spread operator
-    });
-}
+            processResults: function(data, params) {
+                console.log('processResults fired in .invoice-ajax!');
+                // params.page is the one sent to the server, default to 1
+                params.page = params.page || 1;
 
-function initSelect2ItemsList() {
-    $(".item-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url: $("#base_url").val() + "/item/select2/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                    category_id: $("#item_category_id")
-                        ? $("#item_category_id").val()
-                        : "",
-                };
-                return query;
-            },
-            processResults: function (data) {
                 return {
-                    results: data.results,
+                    results: data.results.map(function(item) {
+                        return {
+                            id: item.id,
+                            text: item.text,
+                            party_name: item.party_name,
+                        };
+                    }),
+                    pagination: {
+                        more: data.hasMore // your backend should return hasMore: true/false
+                    }
                 };
-            },
+            }
         },
-    });
-}
+        templateResult: function(data) {
+            if (!data.id) {
+                return data.text; // Placeholder
+            }
 
-function initSelect2ItemBatchList() {
-    $(".item-batch-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url: $("#base_url").val() + "/item/batch/select2/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                    item_id: getSelectedItemId(),
-                };
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
-        },
-    });
-}
+            var partyName = data.party_name ? `<div class="text-muted small mt-1">${data.party_name}</div>` : '';
 
-function initSelect2ItemSerialList() {
-    $(".item-serial-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url: $("#base_url").val() + "/item/serial/select2/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                    item_id: getSelectedItemId(),
-                };
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
+            // Customize the dropdown item display
+            return $(
+                `<div>
+                    <span class='fs-4'>${data.text}</span> ${partyName}<br>
+                </div>`
+            );
         },
-    });
-}
-
-function initSelect2WarehouseList() {
-    $(".warehouse-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url: $("#base_url").val() + "/warehouse/select2/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
+        templateSelection: function(data) {
+            if (!data.id) {
+                return data.text; // Placeholder
+            }
+            // Customize the selected item display
+            return $(
+                `<span>${data.text}</span>`
+            );
         },
-    });
-}
-
-function initSelect2ExpenseItemsList() {
-    $(".expense-item-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url:
-                $("#base_url").val() +
-                "/expense/expense-items-master/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
-        },
-    });
-}
-
-function initSelect2BrandList() {
-    $(".brand-ajax").select2({
-        theme: "bootstrap-5",
-        allowClear: true,
-        cache: true,
-        ajax: {
-            url: $("#base_url").val() + "/item/brand/select2/ajax/get-list",
-            dataType: "json",
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                };
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data.results,
-                };
-            },
-        },
+        escapeMarkup: function(markup) {
+            return markup; // Allow HTML rendering
+        }
     });
 }
 
 function initSelect2ItemList(modalName = null) {
-    $(".item-ajax").select2({
-        theme: "bootstrap-5",
+    $('.item-ajax').select2({
+        theme: 'bootstrap-5',
         allowClear: true,
         cache: true,
-        dropdownParent: modalName, //For pop up modals
+        dropdownParent: modalName,//For pop up modals
         ajax: {
-            url: $("#base_url").val() + "/item/select2/ajax/get-list",
-            dataType: "json",
+            url: $('#base_url').val() + '/item/select2/ajax/get-list',
+            dataType: 'json',
             delay: 250,
             data: function (params) {
-                var query = {
-                    search: params.term,
+                return {
+                    search: params.term || '',
+                    category_id: $('#item_category_id').val() || '',
+                    page: params.page || 1
                 };
-                return query;
             },
-            processResults: function (data) {
+            processResults: function (data, params) {
+                params.page = params.page || 1;
                 return {
                     results: data.results,
+                    pagination: {
+                        more: data.hasMore
+                    }
                 };
-            },
-        },
+            }
+        }
     });
 }
 
-$(document).ready(function ($) {
+function initSelect2PaymentType(options = {}) {
+    $('.payment-type-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/payment-type/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+      ...options //its a valid code, which is called spread operator
+  });
+}
+
+
+
+
+
+function initSelect2ItemBatchList() {
+    $('.item-batch-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/item/batch/select2/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+                  item_id: getSelectedItemId(),
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+function initSelect2ItemSerialList() {
+    $('.item-serial-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/item/serial/select2/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+                  item_id: getSelectedItemId(),
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+function initSelect2WarehouseList() {
+    $('.warehouse-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/warehouse/select2/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+function initSelect2ExpenseItemsList() {
+    $('.expense-item-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/expense/expense-items-master/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+function initSelect2BrandList() {
+    $('.brand-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/item/brand/select2/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+function initSelect2ItemCategoryList() {
+    $('.item-category-ajax').select2({
+      theme: 'bootstrap-5',
+      allowClear: true,
+      cache: true,
+      ajax: {
+          url: $('#base_url').val() + '/item/category/select2/ajax/get-list',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+              var query = {
+                  search: params.term,
+              };
+              return query;
+          },
+          processResults: function(data) {
+              return {
+                  results: data.results
+              };
+          }
+      },
+  });
+}
+
+
+
+$(document).ready(function($) {
     //Party
     initSelect2Parties();
 
+    //Invoice
+    initSelect2Invoice();
+
     //Payment Types
     initSelect2PaymentType();
-
-    //Items Ajax call
-    initSelect2ItemsList();
 
     //Item Batch Select2
     initSelect2ItemBatchList();
@@ -329,13 +402,17 @@ $(document).ready(function ($) {
 
     //Item Master
     initSelect2ItemList();
+
+    //Item Category Master
+    initSelect2ItemCategoryList();
+
 });
 
 function getSelectedItemId() {
-    if ($("#item_id")) {
-        if ($("#item_id").val() != "") {
+    if($("#item_id")){
+        if($("#item_id").val()!=''){
             return $("#item_id").val();
         }
     }
-    return "";
+    return '';
 }
