@@ -1543,6 +1543,13 @@ Route::middleware('auth')->group(function () {
          * Load Sold Items which is used in Sale Return Page
          */
         Route::get('/sold-items/{partyId}/{itemId?}', [SaleController::class, 'getSoldItemsData']);
+
+
+        /**
+         * Ajax selection box search
+         * Load Invoice Details for Sale
+         * */
+        Route::get('/ajax/get-list', [SaleController::class, 'getAjaxSearchBarList']);
     });
 
     /**
