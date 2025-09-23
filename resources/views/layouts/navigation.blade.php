@@ -345,31 +345,37 @@
 </li>
 @endcanany
 
-@canany(['warehouse.view', 'stock_transfer.view'])
-<li>
-	<a href="javascript:;" class="has-arrow">
-		<div class="parent-icon"><i class="bx bx-building"></i>
-		</div>
-		<div class="menu-title">{{
-						__('warehouse.warehouse') }}</div>
-	</a>
-	<ul>
-		@can('warehouse.view')
-		<li class="{{ request()->is('warehouse*') ? 'mm-active' : '' }}">
-			<a href="{{ route('warehouse.list') }}"><i class='bx bx-radio-circle'></i>{{ __('warehouse.warehouses') }}</a>
-		</li>
-		@endcan
+@canany(['warehouse.view', 'stock_transfer.view', 'stock_adjustment.view'])
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bx bx-building"></i>
+                    </div>
+                    <div class="menu-title">{{ __('warehouse.warehouse') }}</div>
+                </a>
+                <ul>
+                    @can('warehouse.view')
+                        <li class="{{ request()->is('warehouse*') ? 'mm-active' : '' }}">
+                            <a href="{{ route('warehouse.list') }}"><i
+                                    class='bx bx-radio-circle'></i>{{ __('warehouse.warehouses') }}</a>
+                        </li>
+                    @endcan
 
-		@can('stock_transfer.view')
-		<li class="{{ request()->is('stock-transfer/list') ? 'mm-active' : '' }}">
-			<a href="{{ route('stock_transfer.list') }}"><i class='bx bx-radio-circle'></i>{{ __('warehouse.stock_transfer') }}</a>
-		</li>
-		@endcan
+                    @can('stock_transfer.view')
+                        <li class="{{ request()->is('stock-transfer/list') ? 'mm-active' : '' }}">
+                            <a href="{{ route('stock_transfer.list') }}"><i
+                                    class='bx bx-radio-circle'></i>{{ __('warehouse.stock_transfer') }}</a>
+                        </li>
+                    @endcan
 
-
-	</ul>
-</li>
-@endcanany
+                    @can('stock_adjustment.view')
+                        <li class="{{ request()->is('stock-adjustment/*') ? 'mm-active' : '' }}">
+                            <a href="{{ route('stock_adjustment.list') }}"><i
+                                    class='bx bx-radio-circle'></i>{{ __('warehouse.adjustment') }}</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcanany
 
 @canany(['import.item', 'import.party', 'generate.barcode'])
 <li>
