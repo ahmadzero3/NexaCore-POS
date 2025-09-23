@@ -77,7 +77,7 @@ class CompanyServiceProvider extends ServiceProvider
                     'bank_details' => $company->bank_details ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'signature' => $company->signature ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'show_signature_on_invoice' => $company->show_signature_on_invoice ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
-                    'show_brand_on_invoice' => $company->show_brand_on_invoice ?? 0,//Item Settings, Sidebar-> Settings -> Company ->Print
+                    'show_brand_on_invoice' => $company->show_brand_on_invoice,//Item Settings, Sidebar-> Settings -> Company ->Print
                     'colored_logo' => $company->colored_logo ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'is_enable_crm' => $isEnableCrm ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Module
                     'is_enable_carrier' => $company->is_enable_carrier ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Module
