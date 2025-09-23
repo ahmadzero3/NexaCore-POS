@@ -375,7 +375,7 @@
                     @endcan
                 </ul>
             </li>
-        @endcanany
+        @endcananyc
 
 @canany(['import.item', 'import.party', 'generate.barcode'])
 <li>
