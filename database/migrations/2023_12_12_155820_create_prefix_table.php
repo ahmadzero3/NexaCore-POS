@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('sale_order')->nullable();
             $table->string('sale')->nullable();
             $table->string('sale_return')->nullable();
+            $table->string('stock_adjustment')->nullable();
             $table->string('stock_transfer')->nullable();
             $table->timestamps();
         });

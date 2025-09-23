@@ -82,6 +82,7 @@ use App\Http\Controllers\Transaction\ChequeController;
 use App\Http\Controllers\Transaction\BankController;
 use App\Http\Controllers\Transaction\CloseCashController;
 use App\Models\Sale\SaleOrder;
+use App\Http\Controllers\StockAdjustmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -490,6 +491,38 @@ Route::middleware('auth')->group(function () {
         Route::get('/pdf/{id}', [StockTransferController::class, 'generatePdf'])
             ->middleware('can:stock_transfer.view')
             ->name('stock_transfer.pdf');
+    });
+	
+	    /**
+     * Stock Adjustment
+     * */
+    Route::group(['prefix' => 'stock-adjustment'], function () {
+        Route::get('/create', [StockAdjustmentController::class, 'create'])
+            ->middleware('can:stock_adjustment.create')
+            ->name('stock_adjustment.create'); //View
+        Route::get('/details/{id}', [StockAdjustmentController::class, 'details'])
+            ->middleware('can:stock_adjustment.view')
+            ->name('stock_adjustment.details');
+        Route::get('/edit/{id}', [StockAdjustmentController::class, 'edit'])
+            ->middleware('can:stock_adjustment.edit')
+            ->name('stock_adjustment.edit'); //Edit
+        Route::put('/update', [StockAdjustmentController::class, 'store'])->name('stock_adjustment.update'); //Update
+        Route::get('/list', [StockAdjustmentController::class, 'list'])
+            ->middleware('can:stock_adjustment.view')
+            ->name('stock_adjustment.list'); //List
+        Route::get('/datatable-list', [StockAdjustmentController::class, 'datatableList'])->name('stock_adjustment.datatable.list'); //Datatable List
+        Route::post('/store', [StockAdjustmentController::class, 'store'])->name('stock_adjustment.store'); //Save operation
+        Route::post('/delete/', [StockAdjustmentController::class, 'delete'])
+            ->middleware('can:stock_adjustment.delete')
+            ->name('stock_adjustment.delete'); //delete operation
+
+        Route::get('/print/{id}', [StockAdjustmentController::class, 'print'])
+            ->middleware('can:stock_adjustment.view')
+            ->name('stock_adjustment.print');
+
+        Route::get('/pdf/{id}', [StockAdjustmentController::class, 'generatePdf'])
+            ->middleware('can:stock_adjustment.view')
+            ->name('stock_adjustment.pdf');
     });
 
     /**
@@ -1184,11 +1217,21 @@ Route::middleware('auth')->group(function () {
          * Load Items for search box for Select2
          * */
         Route::get('/batch/stock/ajax/get-list', [ItemController::class, 'getAjaxItemBatchStockList']);
+		
+		/**
+         * Load Items for search box for autocomplete
+         * */
+        Route::get('/batch-table-records/ajax/get-list', [ItemController::class, 'getAjaxItemBatchTableRecords']);
 
         /**
          * Load Brand for search box for Select2
          * */
         Route::get('/brand/select2/ajax/get-list', [BrandController::class, 'getAjaxSearchBarList']);
+		
+		/**
+         * Load Category for search box for Select2
+         * */
+        Route::get('/category/select2/ajax/get-list', [ItemCategoryController::class, 'getAjaxSearchBarList']);
 
         /**
          * Generate Barcode

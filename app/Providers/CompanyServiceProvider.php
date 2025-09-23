@@ -49,7 +49,7 @@ class CompanyServiceProvider extends ServiceProvider
                     'number_precision' => $company->number_precision ?? 2,
                     'quantity_precision' => $company->quantity_precision ?? 2,
 
-                    'show_sku' => $company->show_sku ?? 2,//Item Settings, Sidebar-> Settings -> Company ->Item
+                    'show_sku' => $company->show_sku ?? 2, //Item Settings, Sidebar-> Settings -> Company ->Item
                     'show_mrp' => $company->show_mrp ?? 2, //Item Settings, Sidebar-> Settings -> Company ->Item
                     'restrict_to_sell_above_mrp' => $company->restrict_to_sell_above_mrp ?? 2, //Item Settings, Sidebar-> Settings -> Company ->Item
                     'restrict_to_sell_below_msp' => $company->restrict_to_sell_below_msp ?? 2, //Item Settings, Sidebar-> Settings -> Company ->Item
@@ -77,14 +77,17 @@ class CompanyServiceProvider extends ServiceProvider
                     'bank_details' => $company->bank_details ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'signature' => $company->signature ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'show_signature_on_invoice' => $company->show_signature_on_invoice ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
+                    'show_brand_on_invoice' => $company->show_brand_on_invoice,//Item Settings, Sidebar-> Settings -> Company ->Print
                     'colored_logo' => $company->colored_logo ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Print
                     'is_enable_crm' => $isEnableCrm ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Module
-                    'is_enable_carrier' => $company->is_enable_carrier ?? 2,//Print Settings, Sidebar-> Settings -> Company ->Module
+                    'is_enable_carrier' => $company->is_enable_carrier ?? 2, //Print Settings, Sidebar-> Settings -> Company ->Module
                     'is_enable_carrier_charge'  => $company->is_enable_carrier_charge ?? 2, //Print Settings, Sidebar-> Settings -> Company ->General
                     'show_discount' => $company->show_discount ?? 2, //Enable Discount Setting: Sidebar-> Settings -> Company ->General
                     'allow_negative_stock_billing' => $company->allow_negative_stock_billing ?? 2, //Enable Negative Stock Billing - Setting: Sidebar-> Settings -> Company ->General
-                    'show_hsn' => $company->show_hsn ?? 2,//Item Settings, Sidebar-> Settings -> Company ->Item
-                    'is_enable_secondary_currency' => $company->is_enable_secondary_currency ?? 2,//Item Settings, Sidebar-> Settings -> Company ->General
+                    'enable_minimum_stock_qty'     => $company->enable_minimum_stock_qty ?? 0,   // ✅ new
+                    'minimum_stock_qty'            => $company->minimum_stock_qty ?? null,       // ✅ new
+                    'show_hsn' => $company->show_hsn ?? 2, //Item Settings, Sidebar-> Settings -> Company ->Item
+                    'is_enable_secondary_currency' => $company->is_enable_secondary_currency ?? 2, //Item Settings, Sidebar-> Settings -> Company ->General
 
 
                 ];

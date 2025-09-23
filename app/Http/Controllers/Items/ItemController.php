@@ -27,6 +27,7 @@ use App\Models\Items\ItemBatchQuantity;
 use App\Models\Tax;
 use App\Models\Unit;
 use Carbon\Carbon;
+use App\Models\Warehouse;
 use App\Services\ItemTransactionService;
 use App\Services\ItemService;
 use App\Services\CacheService;
@@ -823,25 +824,28 @@ class ItemController extends Controller
         $response = $this->returnRequiredFormatData($itemMaster, $showWholesalePrice);
         return response()->json($response);
     }
-    function returnRequiredFormatData($itemMaster, $showWholesalePrice = false)
+function returnRequiredFormatData($itemMaster, $showWholesalePrice = false)
     {
-
         $isPermiteToViewPurchasePrice = (bool) auth()->user()->can('general.allow.to.view.item.purchase.price');
 
         $warehouseId = request('warehouse_id');
 
         // Cache the Tax list
-        $taxList = CacheService::get('tax');
+        $taxList = \App\Services\CacheService::get('tax');
 
         // Cache the Unit list
-        $unitList = CacheService::get('unit');
+        $unitList = \App\Services\CacheService::get('unit');
 
-        $itemMaster->load('itemGeneralQuantities');
+        $itemMaster->load('itemGeneralQuantities', 'brand');
 
         return $itemMaster->map(function ($item) use ($taxList, $unitList, $warehouseId, $showWholesalePrice, $isPermiteToViewPurchasePrice) {
 
             $warehouseStock = $item->itemGeneralQuantities->where('warehouse_id', $warehouseId)->first();
 
+            $warehouseName = '';
+            if ($warehouseId) {
+                $warehouseName = Warehouse::find($warehouseId)?->name ?? '--';
+            }
 
             $itemsArray = [
                 'id'                        => $item->id,
@@ -850,15 +854,12 @@ class ItemController extends Controller
                 'brand_name'                => $item->brand->name ?? '--',
                 'item_code'                 => $item->item_code ?? '',
                 'is_service'                => $item->is_service,
-                'selected_unit_id'          => $item->base_unit_id, //Select Unit
+                'selected_unit_id'          => $item->base_unit_id,
                 'base_unit_id'              => $item->base_unit_id,
                 'secondary_unit_id'         => $item->secondary_unit_id,
                 'conversion_rate'           => $item->conversion_rate,
-                'created_at' => $item->created_at->toIso8601String(),
-                /*'sale_price'                => ($item->is_sale_price_with_tax == 1) ? calculatePrice($item->sale_price, $item->tax->rate, true) : $item->sale_price,
-                    'is_sale_price_with_tax'    => $item->is_sale_price_with_tax,
-                    'sale_price_discount'       => $item->sale_price_discount,
-                    'sale_price_discount_type'  => $item->sale_price_discount_type,*/
+                'created_at'                => $item->created_at->toIso8601String(),
+
                 'purchase_price'            => ($isPermiteToViewPurchasePrice) ?
                     (($item->is_purchase_price_with_tax == 1) ?
                         calculatePrice($item->purchase_price, $item->tax->rate, true) :
@@ -867,8 +868,12 @@ class ItemController extends Controller
                 'tax_id'                    => $item->tax_id,
                 'tracking_type'             => $item->tracking_type,
                 'item_location'             => $item->item_location,
-                //'current_stock'             => $item->current_stock,
+
                 'current_stock'             => $warehouseStock ? $warehouseStock->quantity : 0,
+                'stock_in_unit'             => (new ItemService())
+                    ->getQuantityInUnit($warehouseStock ? $warehouseStock->quantity : 0, $item->id),
+                'warehouse_name'            => $warehouseName,
+
                 'image_path'                => $item->image_path ?? 'no',
                 'mrp'                       => $item->mrp,
                 'quantity'                  => 1,
@@ -880,22 +885,22 @@ class ItemController extends Controller
                 'total_price_after_discount' => 0,
                 'discount_amount'           => 0,
                 'tax_amount'                => 0,
-                'warehouse_id'              => 0,
+                'warehouse_id'              => $warehouseId,
             ];
 
             if ($showWholesalePrice) {
-                $itemsArray['sale_price'] = ($item->is_wholesale_price_with_tax == 1) ? calculatePrice($item->wholesale_price, $item->tax->rate, true) : $item->wholesale_price;
+                $itemsArray['sale_price'] = ($item->is_wholesale_price_with_tax == 1) ?
+                    calculatePrice($item->wholesale_price, $item->tax->rate, true) : $item->wholesale_price;
                 $itemsArray['is_sale_price_with_tax'] = $item->is_wholesale_price_with_tax;
                 $itemsArray['sale_price_discount'] = 0;
                 $itemsArray['sale_price_discount_type'] = 0;
             } else {
-                $itemsArray['sale_price'] = ($item->is_sale_price_with_tax == 1) ? calculatePrice($item->sale_price, $item->tax->rate, true) : $item->sale_price;
+                $itemsArray['sale_price'] = ($item->is_sale_price_with_tax == 1) ?
+                    calculatePrice($item->sale_price, $item->tax->rate, true) : $item->sale_price;
                 $itemsArray['is_sale_price_with_tax'] = $item->is_sale_price_with_tax;
-                //Show Discount Allowed in company then only show sale_price_discount else 0
                 $itemsArray['sale_price_discount'] = (app('company')['show_discount']) ? $item->sale_price_discount : 0;
                 $itemsArray['sale_price_discount_type'] = $item->sale_price_discount_type;
             }
-
 
             return $itemsArray;
         })->toArray();
